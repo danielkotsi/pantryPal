@@ -387,52 +387,335 @@ body {
     margin-bottom: 2rem;
 }
 
-.date-input,
-.search-input {
-    padding: 0.75rem;
+.planner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.period-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.period-nav h3 {
+    margin: 0 0.5rem;
+    font-size: 1.1rem;
+    min-width: 200px;
+    text-align: center;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 0;
+}
+
+.btn-toggle {
     border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.search-input {
-    flex: 1;
-}
-
-.meal-plan-grid,
-.pantry-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.meal-card,
-.pantry-item {
     background: white;
-    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.btn-toggle:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.btn-toggle:last-child {
+    border-radius: 0 4px 4px 0;
+}
+
+.btn-toggle.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.day-column {
+    background: var(--bg-light);
     border-radius: 8px;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
+    padding: 0.75rem;
+    min-height: 300px;
 }
 
-.meal-card:hover,
-.pantry-item:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+.day-column.today {
+    border: 2px solid var(--primary-color);
+    background: #f0f7ff;
 }
 
-.meal-card h3,
-.pantry-item h3 {
+.day-header {
+    text-align: center;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.day-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.day-date {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.day-meals {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 200px;
+}
+
+.day-totals {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.day-totals .macro.kcal {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.day-totals .macro-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.day-totals .macro-row .macro {
+    font-size: 0.7rem;
+}
+
+.meal-expand {
+    margin-top: 0.5rem;
+}
+
+.btn-expand {
+    width: 100%;
+    padding: 0.25rem;
+    font-size: 0.7rem;
+}
+
+.meal-details {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: var(--bg-light);
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+.ingredient-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0;
+}
+
+.ingredient-list li {
+    padding: 0.15rem 0;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+}
+
+.week-totals {
+    background: var(--bg-light);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.totals-bar {
+    font-size: 0.85rem;
+}
+
+.totals-title {
+    font-weight: 700;
     margin-bottom: 0.5rem;
     color: var(--text-primary);
 }
 
-.meal-card p,
-.pantry-item p {
+.totals-macros {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.total-item {
+    text-align: center;
+}
+
+.total-val {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.total-label {
+    display: block;
+    font-size: 0.7rem;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+}
+
+.totals-bar-chart {
+    display: flex;
+    height: 0.75rem;
+    border-radius: 4px;
+    overflow: hidden;
     margin-bottom: 0.5rem;
 }
+
+.totals-bar-chart .bar {
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.bar-protein { background: #e74c3c; }
+.bar-carbs { background: #f39c12; }
+.bar-fat { background: #9b59b6; }
+
+.totals-bar-legend {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.dot.protein { background: #e74c3c; }
+.dot.carbs { background: #f39c12; }
+.dot.fat { background: #9b59b6; }
+
+/* Month View */
+.month-grid {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.month-header-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.month-header-cell {
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.month-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.month-cell {
+    min-height: 80px;
+    padding: 0.3rem;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.75rem;
+}
+
+.month-cell:nth-child(7n) {
+    border-right: none;
+}
+
+.month-cell.empty {
+    background: #fafafa;
+}
+
+.month-cell.today {
+    background: #f0f7ff;
+}
+
+.month-day-num {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+.month-meal {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.1rem 0;
+    cursor: default;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.month-meal-icon {
+    font-size: 0.65rem;
+    flex-shrink: 0;
+}
+
+.btn-small {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.75rem;
+    border: 1px solid var(--border-color);
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.btn-small:hover {
+    background: var(--bg-light);
+}
+
+.meal-detail-panel {
+    background: var(--bg-light);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.meal-detail-panel.hidden {
+    display: none;
+}
+
+.macro.p { color: #e74c3c; }
+.macro.c { color: #f39c12; }
+.macro.f { color: #9b59b6; }
 
 /* Chat Page */
 .chat-container {
@@ -444,7 +727,7 @@ body {
 .chat-messages {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding: 1rem;
     background-color: var(--light-bg);
     border-radius: 4px;
@@ -455,6 +738,13 @@ body {
     padding: 0.75rem 1rem;
     border-radius: 8px;
     max-width: 80%;
+}
+
+.chat-timestamp {
+    display: block;
+    font-size: 0.65rem;
+    opacity: 0.7;
+    margin-top: 0.25rem;
 }
 
 .user-message {
@@ -468,6 +758,30 @@ body {
     background-color: var(--secondary-color);
     color: white;
     margin-right: auto;
+}
+
+.chat-action-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-action:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
 }
 
 .chat-form {
@@ -485,6 +799,166 @@ body {
 
 .chat-form button {
     padding: 0.75rem 1.5rem;
+}
+
+.spinner-small {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.proposal-preview {
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    max-width: 100%;
+    color: var(--text-primary);
+}
+
+.proposal-preview .proposal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.proposal-preview .proposal-type {
+    font-weight: 700;
+    text-transform: capitalize;
+    font-size: 0.9rem;
+}
+
+.proposal-preview .fallback-badge,
+.proposal-preview .ai-badge {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.proposal-preview .fallback-badge {
+    background: #f39c12;
+    color: white;
+}
+
+.proposal-preview .ai-badge {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.proposal-preview .proposal-status {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: capitalize;
+}
+
+.proposal-preview .proposal-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.proposal-preview .proposal-macros,
+.proposal-preview .proposal-week-total {
+    margin-bottom: 0.75rem;
+}
+
+.proposal-preview .proposal-macros h4,
+.proposal-preview .proposal-week-total h4 {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.3rem;
+}
+
+.proposal-preview .macro-row {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    padding: 0.2rem 0;
+    align-items: center;
+}
+
+.proposal-preview .macro-date {
+    min-width: 80px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.proposal-preview .macro-val {
+    font-weight: 600;
+    min-width: 70px;
+}
+
+.proposal-preview .macro.p { color: #e74c3c; }
+.proposal-preview .macro.c { color: #f39c12; }
+.proposal-preview .macro.f { color: #9b59b6; }
+
+.proposal-preview .proposal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.proposal-preview .proposal-actions .btn {
+    font-size: 0.85rem;
+    padding: 0.5rem 1.25rem;
+}
+
+/* Planner Generate Button */
+.planner-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#generateWeekBtn {
+    white-space: nowrap;
+}
+
+/* Proposal Banner (Planner) */
+.proposal-banner {
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.proposal-banner.hidden {
+    display: none;
+}
+
+.proposal-banner-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.proposal-banner-text {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.proposal-banner-actions {
+    display: flex;
+    gap: 0.5rem;
 }
 
 /* Responsive */

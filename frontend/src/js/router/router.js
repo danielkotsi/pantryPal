@@ -87,6 +87,7 @@ class Router {
                 return;
             }
             this.renderPage('plannerPage');
+            setTimeout(() => plannerPageHandler.init(), 0);
         });
         this.register('pantry', () => {
             if (!this.state.isAuthenticated) {
@@ -101,6 +102,7 @@ class Router {
                 return;
             }
             this.renderPage('chatPage');
+            setTimeout(() => chatPageHandler.init(), 0);
         });
     }
 
@@ -141,10 +143,7 @@ class Router {
                 e.preventDefault();
                 await this.handleAuth(e.target);
             }
-            if (e.target.id === 'chatForm') {
-                e.preventDefault();
-                await this.handleChatSubmit(e.target);
-            }
+
         });
 
         // Sign up toggle
@@ -326,37 +325,6 @@ class Router {
                     <button type="button" class="btn btn-secondary" id="toggleSignup">Sign Up</button>
                 </div>
             `;
-        }
-    }
-
-    /**
-     * Handle chat message submission
-     */
-    async handleChatSubmit(form) {
-        const input = form.querySelector('#chatInput');
-        const message = input.value.trim();
-
-        if (!message) return;
-
-        try {
-            const response = await api.sendChatMessage(message);
-            input.value = '';
-
-            // Display message
-            const messagesContainer = document.getElementById('chatMessages');
-            messagesContainer.innerHTML += `
-                <div class="chat-message user-message">
-                    <p>${this.escapeHtml(message)}</p>
-                </div>
-                <div class="chat-message bot-message">
-                    <p>${this.escapeHtml(response.reply || 'No response')}</p>
-                </div>
-            `;
-
-            // Scroll to bottom
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        } catch (error) {
-            this.setState({ error: error.message });
         }
     }
 
