@@ -16,6 +16,8 @@ class PlannerPageHandler {
         this.currentDate = new Date();
         this.weekData = null;
         this.recipeCache = new Map();
+        this.currentProposal = null;
+        this.showingProposal = false;
         this.setupEventListeners();
     }
 
@@ -26,12 +28,18 @@ class PlannerPageHandler {
             const todayBtn = e.target.closest('#todayBtn');
             const toggleBtn = e.target.closest('.btn-toggle');
             const expandBtn = e.target.closest('.btn-expand');
+            const generateBtn = e.target.closest('#generateWeekBtn');
+            const acceptBtn = e.target.closest('#acceptProposalBtn');
+            const declineBtn = e.target.closest('#declineProposalBtn');
 
             if (prevBtn) this.navigatePeriod(-1);
             if (nextBtn) this.navigatePeriod(1);
             if (todayBtn) this.goToToday();
             if (toggleBtn) this.toggleView(toggleBtn.dataset.view);
             if (expandBtn) this.handleExpand(expandBtn);
+            if (generateBtn) this.handleGenerateWeek();
+            if (acceptBtn) this.handleAcceptProposal();
+            if (declineBtn) this.handleDeclineProposal();
         });
     }
 
@@ -109,6 +117,7 @@ class PlannerPageHandler {
         document.querySelectorAll('.btn-toggle').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.view === view);
         });
+        this.updateGenerateButtonVisibility();
         this.loadWeek();
     }
 
@@ -420,6 +429,8 @@ class PlannerPageHandler {
         }
         this.renderPeriodTotals();
         this.renderPeriodLabel();
+        this.renderProposalBanner();
+        this.updateGenerateButtonVisibility();
     }
 
     renderPeriodLabel() {
@@ -640,6 +651,183 @@ class PlannerPageHandler {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    updateGenerateButtonVisibility() {
+        const btn = document.getElementById('generateWeekBtn');
+        if (!btn) return;
+        btn.style.display = this.view === 'week' ? 'inline-block' : 'none';
+        btn.disabled = this.showingProposal;
+    }
+
+    async handleGenerateWeek() {
+        const btn = document.getElementById('generateWeekBtn');
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+        }
+
+        try {
+            const state = router.getState();
+            const message = state.user?.preferences?.notes || 'Generate a weekly meal plan';
+            const response = await api.generatePlan('week', message);
+
+            this.currentProposal = response.proposal;
+            this.showingProposal = true;
+            this.weekData = this.mapProposalToWeekData(response.proposal);
+
+            if (response.fallbackActive) {
+                router.setState({ error: '⚠️ Fallback mode active — using seeded data instead of AI.' });
+            }
+
+            this.render();
+        } catch (err) {
+            router.setState({ error: err.message });
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Generate with AI';
+            }
+        }
+    }
+
+    mapProposalToWeekData(proposal) {
+        const days = [];
+
+        (proposal.days || []).forEach((day) => {
+            const dayDate = new Date(day.date);
+            const meals = {};
+            let dayKcal = 0, dayProtein = 0, dayCarbs = 0, dayFat = 0;
+
+            MEAL_SECTIONS.forEach(section => {
+                const m = day.sections ? day.sections[section] : null;
+                if (m) {
+                    const meal = {
+                        id: m.id || null,
+                        recipeId: m.recipeId || null,
+                        name: m.recipeName || 'Meal',
+                        servings: m.servings,
+                        kcal: Math.round(m.macros ? m.macros.calories : 0),
+                        protein: Math.round(m.macros ? m.macros.proteinG : 0),
+                        carbs: Math.round(m.macros ? m.macros.carbsG : 0),
+                        fat: Math.round(m.macros ? m.macros.fatG : 0),
+                        estimatedCostCents: m.estimatedCostCents,
+                        isConsumed: m.isConsumed || false,
+                        ingredients: m.ingredients || [{ name: m.recipeName || 'Prepared meal', qty: 1, unit: 'serving' }]
+                    };
+                    meals[section] = meal;
+                    dayKcal += meal.kcal;
+                    dayProtein += meal.protein;
+                    dayCarbs += meal.carbs;
+                    dayFat += meal.fat;
+                } else {
+                    meals[section] = null;
+                }
+            });
+
+            days.push({
+                date: day.date,
+                dayName: DAY_NAMES[dayDate.getDay()],
+                dayShort: DAY_SHORT[dayDate.getDay()],
+                meals,
+                totals: {
+                    kcal: Math.round(dayKcal),
+                    protein: Math.round(dayProtein),
+                    carbs: Math.round(dayCarbs),
+                    fat: Math.round(dayFat)
+                }
+            });
+        });
+
+        let weekKcal = 0, weekProtein = 0, weekCarbs = 0, weekFat = 0;
+        days.forEach(d => {
+            weekKcal += d.totals.kcal;
+            weekProtein += d.totals.protein;
+            weekCarbs += d.totals.carbs;
+            weekFat += d.totals.fat;
+        });
+
+        return {
+            startDate: (proposal.plan && proposal.plan.startDate) || (days[0] ? days[0].date : this.formatDate(new Date())),
+            days,
+            weekTotals: {
+                kcal: Math.round(weekKcal),
+                protein: Math.round(weekProtein),
+                carbs: Math.round(weekCarbs),
+                fat: Math.round(weekFat)
+            }
+        };
+    }
+
+    renderProposalBanner() {
+        const existing = document.querySelector('.proposal-banner');
+        if (existing) {
+            if (this.showingProposal && this.currentProposal) {
+                existing.classList.remove('hidden');
+                const textEl = existing.querySelector('.proposal-banner-text');
+                if (textEl) {
+                    const planSource = this.currentProposal.plan && this.currentProposal.plan.source;
+                    const source = planSource === 'fallback' ? 'Fallback' : 'AI';
+                    textEl.textContent = `🤖 AI Generated Plan — ${source} — Accept or Decline?`;
+                }
+            } else {
+                existing.classList.add('hidden');
+            }
+            return;
+        }
+
+        if (!this.showingProposal || !this.currentProposal) return;
+
+        const container = document.querySelector('.planner-container');
+        if (!container) return;
+
+        const banner = document.createElement('div');
+        banner.className = 'proposal-banner';
+        const planSource = this.currentProposal.plan && this.currentProposal.plan.source;
+        const source = planSource === 'fallback' ? 'Fallback' : 'AI';
+        banner.innerHTML = `
+            <div class="proposal-banner-content">
+                <span class="proposal-banner-text">🤖 AI Generated Plan — ${source} — Accept or Decline?</span>
+                <div class="proposal-banner-actions">
+                    <button class="btn btn-primary btn-small" id="acceptProposalBtn">Accept</button>
+                    <button class="btn btn-secondary btn-small" id="declineProposalBtn">Decline</button>
+                </div>
+            </div>
+        `;
+
+        const plannerContent = container.querySelector('#plannerContent');
+        if (plannerContent) {
+            container.insertBefore(banner, plannerContent);
+        } else {
+            container.appendChild(banner);
+        }
+    }
+
+    async handleAcceptProposal() {
+        if (!this.currentProposal) return;
+        try {
+            await api.acceptProposal(this.currentProposal.plan && this.currentProposal.plan.id);
+            this.showingProposal = false;
+            this.currentProposal = null;
+            router.setState({ error: null });
+            this.loadWeekData();
+        } catch (err) {
+            router.setState({ error: err.message });
+        }
+    }
+
+    async handleDeclineProposal() {
+        if (!this.currentProposal) return;
+        const reason = prompt('Optional reason for declining:');
+        try {
+            await api.declineProposal(this.currentProposal.plan && this.currentProposal.plan.id, reason || undefined);
+            this.showingProposal = false;
+            this.currentProposal = null;
+            router.setState({ error: null });
+            this.loadWeekData();
+        } catch (err) {
+            router.setState({ error: err.message });
+        }
     }
 }
 

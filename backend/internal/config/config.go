@@ -61,7 +61,7 @@ func Load() (Config, error) {
 		TokenSecret:          envOr("TOKEN_SECRET", "pantrypal-local-dev-secret"),
 		TokenTTL:             time.Duration(tokenHours) * time.Hour,
 		GeminiAPIKey:         strings.TrimSpace(os.Getenv("GEMINI_API_KEY")),
-		GeminiModel:          envOr("GEMINI_MODEL", "gemini-2.0-flash"),
+		GeminiModel:          envOr("GEMINI_MODEL", "gemini-1.5-flash"),
 		GeminiBaseURL:        envOr("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com"),
 		GeminiTimeout:        time.Duration(geminiTimeoutSeconds) * time.Second,
 		GeminiRetryMax:       geminiRetryMax,

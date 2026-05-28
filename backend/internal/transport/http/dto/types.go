@@ -221,3 +221,53 @@ type WeekPlanResponse struct {
 	Days       []PlanDayResponse     `json:"days"`
 	WeekTotals RecipeMacrosResponse  `json:"weekTotals"`
 }
+
+type ChatSendRequest struct {
+	Message string `json:"message"`
+	Action  string `json:"action,omitempty"`
+}
+
+type ChatMessageResponse struct {
+	ID        string `json:"id"`
+	Role      string `json:"role"`
+	Action    string `json:"action,omitempty"`
+	Content   string `json:"content"`
+	CreatedAt string `json:"createdAt"`
+}
+
+type ChatHistoryResponse struct {
+	Messages []ChatMessageResponse `json:"messages"`
+}
+
+type ChatSendResponse struct {
+	UserMessage ChatMessageResponse `json:"userMessage"`
+	BotMessage  ChatMessageResponse `json:"botMessage"`
+}
+
+type GeneratePlanRequest struct {
+	PeriodType string `json:"periodType"`
+	Message    string `json:"message,omitempty"`
+}
+
+type GeneratePlanResponse struct {
+	Proposal       ProposalResponse `json:"proposal"`
+	FallbackActive bool             `json:"fallbackActive"`
+}
+
+type ConsumedItemInfo struct {
+	FDCID            int64   `json:"fdcId"`
+	Description      string  `json:"description"`
+	PantryItemID     string  `json:"pantryItemId,omitempty"`
+	QuantityDeducted float64 `json:"quantityDeducted"`
+	Unit             string  `json:"unit"`
+	BeforeQuantity   float64 `json:"beforeQuantity"`
+	AfterQuantity    float64 `json:"afterQuantity"`
+	Warning          string  `json:"warning,omitempty"`
+}
+
+type ConsumeMealResponse struct {
+	MealID    string             `json:"mealId"`
+	Consumed  bool               `json:"consumed"`
+	ConsumedAt string            `json:"consumedAt"`
+	Items     []ConsumedItemInfo `json:"items"`
+}

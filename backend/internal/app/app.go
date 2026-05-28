@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"pantrypal/backend/internal/config"
+	"pantrypal/backend/internal/modules/ai"
 	"pantrypal/backend/internal/platform/auth"
 	"pantrypal/backend/internal/platform/db"
 	"pantrypal/backend/internal/repositories"
@@ -27,6 +28,8 @@ func Run(cfg config.Config) error {
 	pantryRepo := repositories.NewPantryRepository(conn)
 	recipeRepo := repositories.NewRecipeRepository(conn)
 	planRepo := repositories.NewPlanRepository(conn)
+	consumptionLogRepo := repositories.NewConsumptionLogRepository(conn)
+	chatRepo := repositories.NewChatRepository(conn)
 	tokenManager := auth.NewTokenManager(cfg.TokenSecret, cfg.TokenTTL)
 
 	authService := services.NewAuthService(userRepo, tokenManager)
@@ -34,6 +37,19 @@ func Run(cfg config.Config) error {
 	pantryService := services.NewPantryService(foodRepo, pantryRepo)
 	recipeService := services.NewRecipeService(recipeRepo)
 	planService := services.NewPlanService(planRepo)
+	consumeService := services.NewConsumeService(planRepo, recipeRepo, pantryRepo, consumptionLogRepo)
+	var geminiClient *ai.Client
+	geminiCfg := ai.ConfigFromApp(cfg)
+	client, err := ai.NewClient(geminiCfg)
+	if err == nil {
+		geminiClient = client
+		log.Printf("gemini client initialized with model %s", cfg.GeminiModel)
+	} else {
+		log.Printf("gemini client not available (%v), fallback-only mode", err)
+	}
+
+	generateService := services.NewGenerateService(geminiClient, planService, profileService, pantryService)
+	chatService := services.NewChatService(chatRepo, generateService, geminiClient, profileService, pantryService)
 
 	healthHandler := handlers.NewHealthHandler()
 	authHandler := handlers.NewAuthHandler(authService)
@@ -41,14 +57,20 @@ func Run(cfg config.Config) error {
 	pantryHandler := handlers.NewPantryHandler(pantryService)
 	recipeHandler := handlers.NewRecipeHandler(recipeService)
 	planHandler := handlers.NewPlanHandler(planService)
+	consumeHandler := handlers.NewConsumeHandler(consumeService)
+	chatHandler := handlers.NewChatHandler(chatService)
+	generateHandler := handlers.NewGenerateHandler(generateService)
 
 	rootHandler := router.New(router.Handlers{
-		Health:  healthHandler,
-		Auth:    authHandler,
-		Profile: profileHandler,
-		Pantry:  pantryHandler,
-		Recipe:  recipeHandler,
-		Plan:    planHandler,
+		Health:   healthHandler,
+		Auth:     authHandler,
+		Profile:  profileHandler,
+		Pantry:   pantryHandler,
+		Recipe:   recipeHandler,
+		Plan:     planHandler,
+		Consume:  consumeHandler,
+		Chat:     chatHandler,
+		Generate: generateHandler,
 	}, tokenManager, userRepo)
 
 	server := &http.Server{
