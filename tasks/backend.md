@@ -1,111 +1,67 @@
-# Session B - Backend Tasks
+# Session B — Backend Engineer
 
-## Owner
+## Your job
+Implement the two remaining backend endpoints: consumption and chat. Then wire AI into the app.
 
-- Backend Engineer (Go API + SQLite)
+## Already done (do not redo)
+- Auth: `POST /auth/register`, `POST /auth/login`, `GET /me` with bcrypt + HMAC tokens
+- Profile: `GET /profile`, `PATCH /profile/metrics`, `PATCH /profile/preferences`, `PATCH /profile/budget`
+- Pantry: `GET /ingredients/search`, `GET /pantry/items`, `POST /pantry/items`, `PATCH /pantry/items/{id}`, `DELETE /pantry/items/{id}`
+- Recipes: `GET /recipes/{id}` with ingredients + macros
+- Plans: `POST /plans/proposal`, `POST /plans/{id}/accept`, `POST /plans/{id}/decline`, `GET /plans/week?start=`
+- App bootstrap, config, DB setup, CORS + logging middleware, seed data
 
-## Objective
+## Step-by-step execution
 
-- Deliver stable API and data layer for auth, profile, pantry, meal plans, macros, and consumption flows.
+### Step 1 — Consumption endpoint (`POST /plan-meals/:id/consume`)
+- [ ] Create `ConsumeService` in `backend/internal/services/consume_service.go`
+- [ ] Load the plan meal by ID, verify it belongs to the requesting user
+- [ ] Load the recipe (if linked via `recipe_id`) to get ingredient `fdc_id` + quantities
+- [ ] For each ingredient, find the user's matching pantry item and deduct the quantity
+- [ ] Clamp pantry quantities at zero
+- [ ] Log each deduction to `consumption_log` with before/after quantities
+- [ ] Mark `plan_meals.is_consumed = 1` and set `consumed_at`
+- [ ] Create `ConsumeHandler` in `backend/internal/transport/http/handlers/consume_handler.go`
+- [ ] Add route: `mux.Handle("POST /plan-meals/{id}/consume", authRequired(http.HandlerFunc(h.Consume.ConsumeMeal)))`
+- [ ] Wire into `app.go` and `router.go`
+- [ ] DTOs: `ConsumeMealResponse` with consumed items and warnings
 
-## Current Status Snapshot
+### Step 2 — Chat endpoint (`POST /chat`, `GET /chat`)
+- [ ] Create `ChatService` in `backend/internal/services/chat_service.go`
+- [ ] `POST /chat`: accept `{ message, action? }`, store user message in `chat_messages`, return the stored message
+- [ ] `GET /chat?limit=50`: return recent messages for the authenticated user
+- [ ] Create `ChatHandler` in `backend/internal/transport/http/handlers/chat_handler.go`
+- [ ] Add routes: `POST /chat`, `GET /chat` (both auth required)
+- [ ] Wire into `app.go` and `router.go`
+- [ ] DTOs: `ChatSendRequest`, `ChatMessageResponse`, `ChatHistoryResponse`
 
-- Implemented: API bootstrap, config loading, token auth, auth handlers/services, profile handlers/services, user repository, health endpoint.
-- Implemented: core SQLite schema, USDA schema, demo seed data, DB bootstrap helper, local reset scripts, API/setup docs.
-- Not implemented: pantry endpoints, recipe endpoints, plan endpoints, purchases endpoints, consumption endpoint, macro aggregation endpoints, backend tests.
+### Step 3 — Wire AI into the generate flow (collaborate with Session D)
+- [ ] Create `GenerateService` or extend `ChatService` to:
+  1. Accept a generation request (meal/day/week/month)
+  2. Call `ai.BuildPrompt()` with user context (metrics, preferences, budget, pantry)
+  3. Call `ai.Client.Generate()` with the prompt
+  4. Call `ai.ParsePlanResponse()` on the result
+  5. Call `PlanService.CreateProposal()` with the normalized payload
+  6. Return the proposal to the frontend
+- [ ] Add route: `POST /generate` (or integrate into `POST /chat` with an `action` field)
+- [ ] Wire into `app.go` (instantiate Gemini client via `ConfigFromApp`)
+- [ ] If Gemini is unavailable — call the fallback generator (Session D builds it in Step 3)
 
-## Ordered Task List
+### Step 4 — Hardening
+- [ ] Add request logging middleware with method, path, duration, status
+- [ ] Run `go build ./...` and fix any compilation errors
+- [ ] Test full flow: register → profile → create proposal → accept → week plan → consume → verify pantry deduction
 
-### 1) Schema and setup first (0:30-1:30)
+## Dependencies
 
-- [x] `P0` Implement SQLite schema + migrations for:
-  - users
-  - user_body_metrics
-  - user_preferences
-  - budgets
-  - purchases
-  - USDA foods / nutrients
-  - recipes
-  - recipe_ingredients
-  - pantry_items
-  - meal_plans
-  - plan_meals
-  - consumption_log
-  - chat_messages
-  - favorites (optional table behind feature flag/time)
-- [x] `P0` Add one-command local DB setup/reset path.
-- [x] `P0` Seed ingredients and minimal recipes for deterministic demo.
+| You need from      | What                        |
+|--------------------|-----------------------------|
+| Session D (AI)     | Fallback generator function |
+| Session D (AI)     | Gemini client is in `ai/` ready to use |
+| Session C (FE)     | Feedback on consume response shape |
 
-### 2) Auth and profile APIs (1:30-2:30)
-
-- [x] `P0` Auth endpoints: `POST /auth/register`, `POST /auth/login`, `GET /me`.
-- [x] `P0` Password hashing and token/session expiry rules.
-- [x] `P0` Profile endpoints for metrics, preferences, budget:
-  - `GET /profile`
-  - `PATCH /profile/metrics`
-  - `PATCH /profile/preferences`
-  - `PATCH /profile/budget`
-- [x] `P0` Publish API v1 examples for frontend and AI sessions.
-
-### 3) Pantry and recipes APIs (2:30-3:30)
-
-- [ ] `P0` `GET /ingredients/search?q=` for pantry add flow.
-- [ ] `P0` `POST /pantry/items` (ingredient + quantity + unit).
-- [ ] `P0` `PATCH /pantry/items/:id` (increment/decrement quantity).
-- [ ] `P0` `DELETE /pantry/items/:id`.
-- [ ] `P0` `GET /recipes/:id` with ingredient quantities and macros.
-- [ ] `P1` Purchases endpoints for budget tracking:
-  - `POST /purchases`
-  - `GET /budget/summary`
-
-### 4) Plan persistence and macro aggregation (3:30-5:00)
-
-- [ ] `P0` `POST /plans/proposal` ingestion endpoint for AI-normalized payload.
-- [ ] `P0` `POST /plans/:id/accept` persists to meal plans.
-- [ ] `P0` `POST /plans/:id/decline` archives/rejects and supports regeneration flow.
-- [ ] `P0` `GET /plans/week?start=` returns 7-day calendar payload.
-- [ ] `P0` Macro totals service in responses:
-  - per meal
-  - per day
-  - per week
-
-### 5) Consumption and pantry deduction (5:00-6:00)
-
-- [ ] `P0` `POST /plan-meals/:id/consume` marks consumed with timestamp.
-- [ ] `P0` Deduct pantry ingredients by recipe quantities.
-- [ ] `P0` Prevent negative pantry values (clamp at zero + warning field).
-- [ ] `P0` Log deductions to `consumption_log` for audit/debug.
-
-### 6) Hardening for demo (6:00-7:00)
-
-- [x] `P0` Add consistent error format for frontend handling.
-- [ ] `P0` Add lightweight request logging and key action tracing.
-- [ ] `P0` Add smoke checks for auth -> plan accept -> consume flow.
-- [ ] `P1` Add favorite proposal endpoint if time remains.
-
-## Contracts Needed From Others
-
-- PM: frozen priority and final scope boundaries.
-- AI: normalized proposal JSON schema and ingredient matching policy.
-- Frontend: required response fields per screen.
-- QA: top-priority test scenarios and failure expectations.
-
-## Risks
-
-- AI names not matching ingredient table.
-- Unit mismatches (g/ml/piece) creating deduction inaccuracies.
-- Time overrun from building too many endpoints before core path is stable.
-
-## Done Criteria
-
-- API supports full happy path from auth to pantry auto-deduction.
-- Weekly plan endpoint returns 7-day, 4-section layout with macro totals.
-- DB setup/seed is reproducible in one command.
-- Frontend can run without backend contract guesswork.
-
-## Immediate Backend Focus
-
-- Pantry search/add/update/delete endpoints.
-- Recipe read payloads with ingredient names sourced from USDA foods.
-- Weekly plan persistence/read model and accept/decline lifecycle.
-- Consumption endpoint plus pantry deduction and logging.
+## Done criteria
+- `POST /plan-meals/:id/consume` deducts pantry and logs consumption
+- `POST /chat` + `GET /chat` store and return messages
+- Gemini generation wired and reachable via an endpoint
+- `go build ./...` passes

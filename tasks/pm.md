@@ -1,74 +1,84 @@
-# Session A - Product Manager Tasks
+# Session A — Product Manager
 
-## Owner
+## Your job
+Keep the build coordinated, resolve blockers quickly, and ensure the demo flow works end-to-end.
 
-- Product Manager / Integration Lead
+## What is already complete
+- All backend routes except consumption, chat, and AI wiring
+- AI client, parser, schema, prompt builder, unit tests
+- Frontend shell, router, API client, auth/profile pages, CSS
+- DB schema, seed data, reset scripts
 
-## Objective
+## What each agent is building (order-independent)
 
-- Keep the 8-hour demo focused on a working end-to-end flow.
-- Lock scope quickly, unblock cross-session dependencies, and manage risk/time.
+### Session B — Backend
+| Step | Task | Est. time |
+|------|------|-----------|
+| 1 | Consumption endpoint | 1.5h |
+| 2 | Chat endpoint | 1h |
+| 3 | Wire AI into generate endpoint | 1h |
+| 4 | Hardening + logging middleware | 30m |
 
-## Current Status Snapshot
+### Session C — Frontend
+| Step | Task | Est. time |
+|------|------|-----------|
+| 1 | Fix API client URLs | 30m |
+| 2 | Planner page handler | 1.5h |
+| 3 | Pantry page handler | 1h |
+| 4 | Chat page with proposal actions | 1.5h |
+| 5 | Consume meal button | 30m |
+| 6 | Polish | 30m |
 
-- Backend Phase 1 is partially complete: auth/profile foundation, DB schema, seed data, and setup docs are implemented.
-- Frontend, AI, and QA workstreams are still open.
+### Session D — AI
+| Step | Task | Est. time |
+|------|------|-----------|
+| 1 | Fallback canned plan generator | 1h |
+| 2 | Wire Gemini into app.go | 1h |
+| 3 | Ingredient matching service | 1h (P1) |
+| 4 | Prompt presets for demo | 30m |
 
-## Ordered Task List
+### Session E — QA
+| Step | Task | Est. time |
+|------|------|-----------|
+| 1 | Smoke test existing endpoints | 1h |
+| 2 | Re-test as new features land | ongoing |
+| 3 | Final regression + sign-off | 1h |
 
-### 0) Kickoff and scope lock (0:00-0:30)
+## Execution order (recommended)
 
-- [ ] `P0` Confirm demo storyline: signup -> profile setup -> generate week plan -> accept -> pantry update -> consume meal.
-- [ ] `P0` Confirm out-of-scope items for this sprint (full optimization, advanced settings, heavy polish).
-- [ ] `P0` Assign session owners and communication cadence (check-ins at 2h/4h/6h/8h).
-- [ ] `P0` Create shared decision log with timestamps and owner.
+```
+Hour 0     Hour 1     Hour 2     Hour 3     Hour 4     Hour 5     Hour 6     Hour 7
+├──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤
+B: Consumption ──────►│ B: Chat ──────────►│ B: Wire AI ──────────►│ B: Harden │
+                      │                     │                        │           │
+C: Fix URLs ►│ C: Planner ───────────────►│ C: Pantry ───────────►│ C: Chat+Proposals ──►│ C: Polish│
+              │                            │                        │                      │          │
+D: Fallback ──►│ D: Wire Gemini into app ──►│ D: Ingredient matching (P1)                  │
+                │                            │                        │                      │
+E: Smoke tests ────────────────►│ E: Ongoing regression ──────────────────────────────────►│ E: Signoff│
+```
 
-### 1) Spec freeze for parallel work (0:30-2:00)
+## Key checkpoints for you
+- **End of Hour 1**: Frontend API URLs fixed; fallback generator exists
+- **End of Hour 2**: Consumption endpoint testable; planner page renders static data
+- **End of Hour 3**: Chat endpoint works; pantry page works; AI wiring started
+- **End of Hour 4**: Accept/decline flow through chat works end-to-end
+- **End of Hour 5**: Consume meal button deducts pantry; full demo loop works
+- **End of Hour 6**: All P0 features complete; QA begins full regression
+- **End of Hour 7**: QA sign-off; bug fixes; final demo prepped
 
-- [ ] `P0` Freeze API v1 contract by 2h mark.
-- [x] `P0` Publish auth/profile API v1 docs for implemented endpoints.
-- [ ] `P0` Freeze pantry/plan/chat API v1 contract for remaining work.
-- [ ] `P0` Freeze AI response shape v1 (meals/day split, ingredient fields, macros, cost).
-- [ ] `P0` Freeze frontend MVP screens and navigation map.
-- [ ] `P0` Define acceptance rules for plan proposal (accept, decline/regenerate, favorite optional).
+## Blockers to watch
+1. **Frontend API client URLs** — fix this first, else every frontend page will fail
+2. **Gemini API key** — without it, AI generation will always use fallback. Make sure Session D has the key.
+3. **DB path** — the Go binary runs from `backend/` with default DB path `../database/sqlite/pantrypal.db`. If frontend runs `go run` from a different directory, the path breaks. Standardize: `cd backend && go run ./cmd/api`
+4. **CORS** — frontend runs on a different port/domain. Middleware is already in place but verify origin is allowed.
 
-### 2) Integration management (2:00-6:30)
+## Fallback plan
+If Gemini is unavailable at demo time:
+- The fallback generator in Session D Step 1 provides a deterministic week plan
+- The demo flow works identically — the user just sees "AI fallback mode" banner
+- No feature is blocked
 
-- [ ] `P0` Resolve cross-team blockers in <=15 minutes each.
-- [ ] `P0` Verify backend/frontend contract alignment after every major endpoint.
-- [ ] `P0` Verify AI ingredient matching strategy and fallback behavior.
-- [ ] `P1` Keep release notes updated with what is demo-ready vs partially complete.
-
-### 3) Demo readiness (6:30-8:00)
-
-- [ ] `P0` Run full walkthrough with QA observer.
-- [ ] `P0` Prepare demo script with exact clicks and API actions.
-- [ ] `P0` Mark risks and fallback moves for each step (especially AI outage).
-- [ ] `P0` Final go/no-go checklist with owners for each section.
-
-## Contracts Needed From Others
-
-- Backend: stable endpoint list, payload examples, migration/setup command.
-- Frontend: final routes/screens and expected loading/error states.
-- AI: prompt template, JSON schema, fallback plan output format.
-- QA: final bug severity rubric and test checklist coverage.
-
-## Risks
-
-- API contract drift after 2h causing rework.
-- AI output variability breaking parser.
-- Pantry deduction logic unclear at edge cases.
-- Time spent on optional features reducing demo stability.
-
-## Done Criteria
-
-- API and AI contracts are frozen and shared.
-- End-to-end demo script passes at least once without manual DB edits.
-- Each session has explicit must-have vs nice-to-have status.
-- Fallback demo path exists if AI service fails.
-
-## Immediate PM Focus
-
-- Lock the remaining contract for pantry, plans, and chat before frontend starts real UI work.
-- Decide whether monthly plan generation is true P0 or just a thin extension of weekly flow.
-- Decide whether favorites stays P1 or is dropped for the hackathon demo.
+If any frontend page is incomplete:
+- The demo script can use `curl` commands to show the API working
+- PM should prepare curl commands for each step as a safety net

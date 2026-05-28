@@ -1,89 +1,100 @@
-# Session C - Frontend Tasks
+# Session C — Frontend Engineer
 
-## Owner
+## Your job
+Build the remaining 3 page handlers (planner, pantry, chat) and fix the API client URLs. Then wire the consume meal action.
 
-- Frontend Engineer (Vanilla JS)
+## Already done (do not redo)
+- `index.html` with all 5 page templates (auth, profile, planner, pantry, chat) + navbar + error/loading
+- `router.js` — SPA routing, state management, auth guard, navigation, localStorage persistence
+- `api-client.js` — HTTP methods, Bearer token, error handling (but endpoint URLs are WRONG — fix in Step 1)
+- `pages/profile.js` — full profile form with metrics/preferences/budget submit handlers
+- `app.js` — initialization, error/loading display
+- `css/styles/main.css` — complete responsive styles
 
-## Objective
+## Step-by-step execution
 
-- Build a clean, fast demo UI that proves all core flows using the backend API.
+### Step 1 — Fix API client URLs (30 mins, unblocks everything)
+**File: `frontend/src/js/api/api-client.js`**
 
-## Current Status Snapshot
+Current wrong routes → correct routes:
+- `/pantry` → `/pantry/items` (GET, POST)
+- `/pantry/${id}` → `/pantry/items/${id}` (PUT → PATCH, DELETE)
+- `/meal-plans` → `/plans/proposal` (POST)
+- `/meal-plans/${id}` → `/plans/${id}/accept` (PUT → POST), `/plans/${id}/decline` (PUT → POST)
+- `/meal-plans?date=` → `/plans/week?start=` (GET)
+- Add missing: `searchIngredients(query)` → `GET /ingredients/search?q=`
+- Add missing: `getRecipe(id)` → `GET /recipes/{id}`
+- Fix: `updatePantryItem` should PATCH with `{ quantityDelta }` not PUT with full body
+- Fix: `addMealPlan` → `createProposal` with `PlanProposalRequest` shape
 
-- Frontend has folder structure only.
-- No HTML, JS, CSS, routing, state, or API integration is implemented yet.
-- Auth/profile backend endpoints already exist and are ready to consume.
+### Step 2 — Planner page handler (most complex, 1-2 hours)
+**File: `frontend/src/js/pages/planner.js`**
 
-## Ordered Task List
+- [ ] Create `PlannerPageHandler` class matching `ProfilePageHandler` pattern
+- [ ] On navigation to planner route, call `GET /plans/week?start={monday}` for the current week
+- [ ] Render a 7-column grid, one column per day
+- [ ] Each day column shows 4 sections: breakfast, lunch, dinner, snacks
+- [ ] Each section shows: recipe name, ingredient names, macros (protein/carbs/fat/calories)
+- [ ] At the bottom of each day column: daily macro total
+- [ ] Below the grid: weekly macro total row
+- [ ] Add a week navigation control (prev/next week buttons)
+- [ ] Handle empty state (no plan yet) and error state
+- [ ] Register the page in `initializeRoutes()` in `router.js`
 
-### 1) App shell and API client (0:30-1:30)
+### Step 3 — Pantry page handler (1 hour)
+**File: `frontend/src/js/pages/pantry.js`**
 
-- [ ] `P0` Set up page structure and shared layout (auth, profile, planner, pantry, chat).
-- [ ] `P0` Build API client helpers for auth headers, JSON handling, and error display.
-- [ ] `P0` Add simple route/state switching (no framework) between major sections.
+- [ ] Create `PantryPageHandler` class
+- [ ] Search input: on typing, call `GET /ingredients/search?q=` and show results
+- [ ] Selecting a result opens an "add to pantry" form with quantity + unit fields
+- [ ] Below search: list of current pantry items from `GET /pantry/items`
+- [ ] Each item shows: food name, quantity, unit
+- [ ] Each item has + / - buttons to increment/decrement via `PATCH /pantry/items/{id}`
+- [ ] Each item has a delete button via `DELETE /pantry/items/{id}`
+- [ ] Register in router
 
-### 2) Auth and profile screens (1:30-2:30)
+### Step 4 — Chat page handler with proposal actions (1-2 hours)
+**File: `frontend/src/js/pages/chat.js`**
 
-- [ ] `P0` Register + login forms connected to API.
-- [ ] `P0` Persist auth token/session in browser storage for demo.
-- [ ] `P0` Profile form for body metrics, preferences, budget.
-- [ ] `P0` Save/update profile and show success/error feedback.
+- [ ] Create `ChatPageHandler` class
+- [ ] Load chat history from `GET /chat` on mount
+- [ ] Action buttons row above the chat input:
+  - "Create Meal" → sends action=meal to backend
+  - "Create Day Plan" → action=day
+  - "Create Week Plan" → action=week
+  - "Create Month Plan" → action=month
+- [ ] When a proposal is returned, render it below the chat as a preview card:
+  - Plan type, date range, total cost
+  - Days with 4 meal sections, macros per meal
+- [ ] Below the preview: Accept button (POST /plans/{id}/accept) and Decline button (POST /plans/{id}/decline)
+- [ ] On accept, navigate to planner page to show the accepted plan
+- [ ] On decline, show a confirmation and allow regeneration
+- [ ] Register in router
 
-### 3) Weekly planner UI (2:30-4:30)
+### Step 5 — Consume meal action (30 mins)
+- [ ] In the planner page, add a "Consume" button on each meal section
+- [ ] On click, call `POST /plan-meals/{id}/consume`
+- [ ] Show success feedback and refresh the planner data
+- [ ] Show a banner: "Pantry updated — X items deducted"
+- [ ] Handle error: "Not enough pantry stock for Y ingredient"
 
-- [ ] `P0` Build 7-day calendar-like layout.
-- [ ] `P0` Render 4 sections per day: breakfast, lunch, dinner, snacks.
-- [ ] `P0` Show ingredients, quantities, and macros per meal.
-- [ ] `P0` Show macro totals per day and per week.
-- [ ] `P1` Add lightweight monthly toggle view if backend payload is ready.
+### Step 6 — Polish
+- [ ] Add loading/empty states for planner, pantry, chat
+- [ ] Ensure all pages handle 401 response by redirecting to auth
+- [ ] Test full flow manually: register → profile → chat → generate week → accept → planner → consume
 
-### 4) Pantry and consumption flow (4:30-5:30)
+## Dependencies
 
-- [ ] `P0` Pantry ingredient search input with result list.
-- [ ] `P0` Add item with quantity/unit.
-- [ ] `P0` Increment/decrement/remove pantry items.
-- [ ] `P0` Add "consume meal" action in planner and refresh pantry state.
+| You need from      | What                                    |
+|--------------------|-----------------------------------------|
+| Session B (backend)| Consumption endpoint shape (Step 4/5)   |
+| Session B (backend)| Chat endpoint shape (Step 4)            |
+| Session B (backend)| Generate endpoint shape (Step 4)       |
+| Session D (AI)     | Example proposal JSON for rendering mock|
 
-### 5) Chat and plan actions (5:30-6:30)
-
-- [ ] `P0` Chat panel with action buttons:
-  - create meal
-  - create day plan
-  - create week plan
-  - create month plan
-- [ ] `P0` Render proposal preview returned by API.
-- [ ] `P0` Accept and decline buttons wired to proposal endpoints.
-- [ ] `P1` Favorite action button if endpoint is available.
-
-### 6) Demo polish and resilience (6:30-7:30)
-
-- [ ] `P0` Add loading and empty states for each screen.
-- [ ] `P0` Add fail-safe banner if AI service fallback mode is active.
-- [ ] `P0` Ensure mobile-usable layout and legible data density.
-- [ ] `P0` Prepare one-click path for live demo navigation.
-
-## Contracts Needed From Others
-
-- Backend: stable endpoint contracts and sample responses.
-- AI: proposal payload format and error/fallback response shape.
-- PM: final demo path and required screen order.
-- QA: bug priority list for final hour fixes.
-
-## Risks
-
-- Contract changes late in build causing UI rewiring.
-- Overbuilding visuals before core actions are connected.
-- Too much on one page reducing clarity in live demo.
-
-## Done Criteria
-
-- User can authenticate, edit profile, generate/accept a weekly plan, and consume a meal.
-- Planner clearly shows 7 days x 4 sections with macro totals.
-- Pantry updates reflect manual edits and automatic meal consumption.
-- Chat actions are usable via buttons without manual API calls.
-
-## Immediate Frontend Focus
-
-- Build auth and profile screens first because the API already exists.
-- Delay weekly planner and pantry UI until backend contracts for plans/pantry are frozen.
-- Keep the first usable milestone as: login/register -> fetch profile -> edit profile.
+## Done criteria
+- Planner shows 7 days x 4 sections with macros from real API data
+- Pantry search/add/remove/decrement all work against backend
+- Chat has action buttons, proposal preview, accept/decline
+- Consume meal button deducts pantry and shows feedback
+- No hardcoded/incorrect API URLs remain

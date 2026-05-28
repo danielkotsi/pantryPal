@@ -1,81 +1,107 @@
-# Session E - QA Tasks
+# Session E — QA Engineer
 
-## Owner
+## Your job
+Validate the full demo flow, catch bugs early, and sign off before demo.
 
-- QA Engineer / Bug Triage Lead
+## Already testable now
+- Backend endpoints for auth, profile, pantry, recipes, plans (see full list below)
+- AI parser unit tests (4 passing)
+- Frontend auth + profile pages
 
-## Objective
+## Step-by-step execution
 
-- Validate end-to-end happy path, catch critical failures early, and keep the demo stable.
+### Step 1 — Smoke test existing backend endpoints (1 hour)
+Run a full manual pass against the running API:
 
-## Current Status Snapshot
+- [ ] `GET /health` → 200
+- [ ] `POST /auth/register` with valid fields → 201 + token
+- [ ] `POST /auth/register` with invalid email → 400
+- [ ] `POST /auth/register` with weak password → 400
+- [ ] `POST /auth/register` with duplicate email → 409
+- [ ] `POST /auth/login` with correct credentials → 200 + token
+- [ ] `POST /auth/login` with wrong password → 401
+- [ ] `GET /me` with valid token → 200 + user
+- [ ] `GET /me` without token → 401
+- [ ] `GET /me` with expired/invalid token → 401
+- [ ] `GET /profile` → 200 with metrics/prefs/budget
+- [ ] `PATCH /profile/metrics` → 200, verify changes persist on GET
+- [ ] `PATCH /profile/preferences` → 200, verify changes persist
+- [ ] `PATCH /profile/budget` → 200, verify changes persist
+- [ ] `GET /ingredients/search?q=chicken` → 200 with results
+- [ ] `GET /ingredients/search?q=` (empty) → 400
+- [ ] `GET /pantry/items` → 200 with demo seed items
+- [ ] `POST /pantry/items` with valid fdcId/qty/unit → 201
+- [ ] `POST /pantry/items` with invalid fdcId → 400
+- [ ] `POST /pantry/items` with zero qty → 400
+- [ ] `PATCH /pantry/items/{id}` with positive delta → 200, quantity increases
+- [ ] `PATCH /pantry/items/{id}` with negative delta → 200, quantity decreases
+- [ ] `DELETE /pantry/items/{id}` → 204
+- [ ] `DELETE /pantry/items/{id}` (already deleted) → 404
+- [ ] `GET /recipes/rcp_breakfast_oats` → 200 with ingredients + macros
+- [ ] `GET /recipes/invalid` → 404
+- [ ] `POST /plans/proposal` with valid payload → 201
+- [ ] `POST /plans/{id}/accept` → 200, status changes to accepted
+- [ ] `POST /plans/{id}/accept` (already accepted) → 409
+- [ ] `POST /plans/{id}/decline` → 200, status changes to declined
+- [ ] `POST /plans/{id}/decline` (already declined) → 409
+- [ ] `GET /plans/week?start=2026-06-01` → 200 with days + macro totals
 
-- No QA scripts, bug tracker docs, or automated tests are implemented yet.
-- The only testable implemented surface right now is backend health/auth/profile plus DB reset flow.
+### Step 2 — Run AI parser tests (already passing)
+- [ ] Run `go test ./internal/modules/ai/...` and confirm all 4 tests pass
 
-## Ordered Task List
+### Step 3 — Test new backend endpoints as they ship (ongoing)
 
-### 1) Test plan setup (0:30-1:00)
+**When consumption endpoint lands:**
+- [ ] `POST /plan-meals/{id}/consume` marks meal as consumed
+- [ ] Pantry quantities decrease by meal ingredient amounts
+- [ ] Pantry quantities clamp at zero (not negative)
+- [ ] `consumption_log` has entries for each deducted ingredient
+- [ ] Calling consume on already-consumed meal returns appropriate error
 
-- [ ] `P0` Create concise test checklist aligned to demo flow.
-- [ ] `P0` Define severity levels:
-  - `S0` demo blocker
-  - `S1` major workaround needed
-  - `S2` minor issue/cosmetic
-- [ ] `P0` Define bug report template (steps, expected, actual, env, screenshot/log).
+**When chat endpoint lands:**
+- [ ] `POST /chat` stores message and returns it
+- [ ] `GET /chat` returns recent messages
+- [ ] Auth required for both
 
-### 2) Early validation pass (1:00-3:00)
+### Step 4 — Test frontend as pages land (ongoing)
 
-- [ ] `P0` Validate auth flow: register, login, logout, bad credentials.
-- [ ] `P0` Validate profile updates: metrics, preferences, budget persistence.
-- [ ] `P0` Validate DB reset/setup flow and seeded demo data.
-- [ ] `P0` Validate pantry flow: search/add/remove/decrement behavior once implemented.
-- [ ] `P0` Confirm API error messages are actionable for UI display.
+**When planner page lands:**
+- [ ] Week navigation works (prev/next)
+- [ ] 7 columns with 4 sections each render
+- [ ] Macro totals per day and per week are correct
+- [ ] Empty state when no plan exists
+- [ ] Error state when API fails
 
-### 3) AI and plan flow validation (3:00-5:30)
+**When pantry page lands:**
+- [ ] Search returns results from API
+- [ ] Add item creates pantry entry
+- [ ] +/- buttons update quantity
+- [ ] Delete removes item
 
-- [ ] `P0` Validate chat actions for meal/day/week/month generation.
-- [ ] `P0` Validate proposal structure: 4 sections/day and macros present.
-- [ ] `P0` Validate accept persists plan and appears in weekly calendar.
-- [ ] `P0` Validate decline triggers regenerate behavior.
-- [ ] `P1` Validate fallback mode when AI service fails.
+**When chat page lands:**
+- [ ] Action buttons trigger generation
+- [ ] Proposal preview renders correctly
+- [ ] Accept/decline work and update state
 
-### 4) Consumption and data integrity checks (5:30-6:30)
+**When consume button lands:**
+- [ ] Meal marked consumed after click
+- [ ] Pantry updates reflected in pantry page
 
-- [ ] `P0` Mark meal consumed and verify pantry deduction accuracy.
-- [ ] `P0` Verify no negative pantry values are shown.
-- [ ] `P0` Verify macro totals remain consistent after consumption actions.
-- [ ] `P1` Verify budget/purchase summary if implemented.
+### Step 5 — Final regression + demo sign-off (last hour)
+- [ ] Run full end-to-end flow without any manual DB edits:
+  1. Reset DB with `./scripts/db/local_db.sh reset-all`
+  2. Register a new user
+  3. Set profile metrics, preferences, budget
+  4. Generate a week plan via chat
+  5. Accept the plan
+  6. View the plan in the weekly calendar
+  7. Consume a meal
+  8. Verify pantry deduction
+  9. Logout and login again
+- [ ] Document all S0/S1 issues with workarounds
+- [ ] Deliver sign-off report to PM
 
-### 5) Final regression and demo sign-off (6:30-8:00)
-
-- [ ] `P0` Execute full end-to-end regression script once before demo.
-- [ ] `P0` Re-test all fixed `S0`/`S1` bugs.
-- [ ] `P0` Produce final known-issues list with workarounds.
-- [ ] `P0` Sign-off checklist for PM with go/no-go recommendation.
-
-## Contracts Needed From Others
-
-- PM: canonical demo script and must-pass checkpoints.
-- Backend: stable test data/reset process and endpoint error contracts.
-- Frontend: expected UI states for loading/errors/empty data.
-- AI: expected fallback behavior and schema validation errors.
-
-## Risks
-
-- Late integration creates clustered `S0` defects.
-- Test data drift causes inconsistent reproducibility.
-- Fallback behavior untested until late, risking live demo failures.
-
-## Done Criteria
-
-- All `S0` issues are resolved or have accepted workaround paths.
-- End-to-end script passes in a clean environment.
-- Known issues and impact are documented for demo presenters.
-- QA sign-off delivered to PM before final demo run.
-
-## Immediate QA Focus
-
-- Start with backend API smoke coverage for `/health`, auth, and profile.
-- Create reusable test user/data notes based on the seeded local DB.
-- Add pantry/plan/AI checks only after those features land.
+## Bug severity rubric
+- `S0` — Demo blocker. Full flow breaks, no workaround.
+- `S1` — Major. Flow works but with significant UX friction or manual steps.
+- `S2` — Minor. Cosmetic issue, non-critical error message, edge case.
