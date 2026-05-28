@@ -1,0 +1,100 @@
+have a look at @tasks/ai.md you will be the ai engineer
+Called the Read tool with the following input: {"filePath":"/root/Panathenaia/pantryPal/tasks/ai.md"}
+<path>/root/Panathenaia/pantryPal/tasks/ai.md</path>
+<type>file</type>
+<content>
+1: # Session D - AI/RAG Tasks
+2: 
+3: ## Owner
+4: 
+5: - AI Engineer (Gemini integration + output normalization)
+6: 
+7: ## Objective
+8: 
+9: - Provide reliable meal generation through Gemini with deterministic output shape for backend/frontend use.
+10: 
+11: ## Current Status Snapshot
+12: 
+13: - AI directory is scaffolding only.
+14: - No Gemini client, prompt templates, schema validation, matching, or fallback implementation exists yet.
+15: - Backend already has schema tables ready for meal plans and chat persistence.
+16: 
+17: ## Ordered Task List
+18: 
+19: ### 1) Integration baseline (0:30-1:30)
+20: 
+21: - [ ] `P0` Implement Gemini client wrapper with timeout/retry guards.
+22: - [ ] `P0` Configure API key loading via env variables.
+23: - [ ] `P0` Define request templates for:
+24:   - single meal
+25:   - day plan
+26:   - week plan
+27:   - month plan
+28: 
+29: ### 2) Output schema and parser (1:30-3:00)
+30: 
+31: - [ ] `P0` Define strict JSON schema for AI output.
+32: - [ ] `P0` Include required fields per meal:
+33:   - meal_type (breakfast/lunch/dinner/snack)
+34:   - recipe_name
+35:   - ingredient list with quantity and unit
+36:   - macros (protein, carbs, fat, calories)
+37:   - estimated cost
+38: - [ ] `P0` Build validation/parsing layer with clear error reasons.
+39: - [ ] `P0` Reject/repair malformed responses before backend persistence.
+40: 
+41: ### 3) Context and personalization (3:00-4:30)
+42: 
+43: - [ ] `P0` Inject user context: preferences, body metrics, budget target, pantry snapshot.
+44: - [ ] `P0` Add constraints for 4-sections/day structure.
+45: - [ ] `P0` Add prompt guardrails for budget awareness and ingredient realism.
+46: - [ ] `P1` Add simple conversation memory window for follow-up prompts.
+47: 
+48: ### 4) Ingredient matching and macro consistency (4:30-5:30)
+49: 
+50: - [ ] `P0` Build ingredient name normalization to map AI strings to DB ingredients.
+51: - [ ] `P0` Return unmatched ingredients list for backend/UI warnings.
+52: - [ ] `P0` Reconcile macro totals per meal/day/week in normalized output.
+53: - [ ] `P1` Add alias dictionary for common ingredient synonyms.
+54: 
+55: ### 5) Accept/decline and fallback mode (5:30-6:30)
+56: 
+57: - [ ] `P0` Support regenerate flow with decline reason/context.
+58: - [ ] `P0` Ensure accepted proposal payload is stable for persistence.
+59: - [ ] `P0` Implement fallback canned generator if Gemini fails/timeouts.
+60: - [ ] `P0` Expose fallback status flag for frontend banner.
+61: 
+62: ### 6) Demo hardening (6:30-7:30)
+63: 
+64: - [ ] `P0` Add observability fields (request id, model latency, parse status).
+65: - [ ] `P0` Prepare 2-3 tested prompt presets for live demo reliability.
+66: - [ ] `P1` Add favorites metadata output shape for optional feature.
+67: 
+68: ## Contracts Needed From Others
+69: 
+70: - Backend: ingredient canonical list, plan proposal ingest schema, error contract.
+71: - Frontend: expected chat/proposal rendering shape.
+72: - PM: scope lock for personalization depth and month-plan expectations.
+73: - QA: failure-mode cases for malformed AI responses.
+74: 
+75: ## Risks
+76: 
+77: - Non-deterministic model output breaking parser.
+78: - Ingredient mismatch rates too high for pantry deduction.
+79: - API rate limits/latency impacting live demo.
+80: 
+81: ## Done Criteria
+82: 
+83: - AI output consistently validates against schema.
+84: - Plans generate for meal/day/week/month requests with 4 sections/day.
+85: - Ingredient mapping returns canonical IDs or explicit unmatched list.
+86: - Fallback generator can replace Gemini without breaking the demo path.
+87: 
+88: ## Immediate AI Focus
+89: 
+90: - Freeze the JSON response schema before any model integration work.
+91: - Define ingredient matching against `usda_foods` because there is no standalone `ingredients` table.
+92: - Build fallback canned week plan early so the demo is never blocked on Gemini.
+
+(End of file - total 92 lines)
+</content>
