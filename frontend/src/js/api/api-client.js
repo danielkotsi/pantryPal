@@ -259,30 +259,25 @@ class APIClient {
     /**
      * Meal plan endpoints
      */
-    getMealPlans(date) {
-        const params = date ? `?date=${date}` : '';
-        return this.get(`/meal-plans${params}`);
+    getWeekPlan(startDate) {
+        return this.get(`/plans/week?start=${startDate}`);
     }
 
-    addMealPlan(mealPlan) {
-        return this.post('/meal-plans', mealPlan);
+    createProposal(proposal) {
+        return this.post('/plans/proposal', proposal);
     }
 
-    updateMealPlan(planId, mealPlan) {
-        return this.put(`/meal-plans/${planId}`, mealPlan);
+    acceptProposal(planId) {
+        return this.post(`/plans/${planId}/accept`);
     }
 
-    deleteMealPlan(planId) {
-        return this.delete(`/meal-plans/${planId}`);
+    declineProposal(planId, reason) {
+        return this.post(`/plans/${planId}/decline`, { reason });
     }
 
     /**
      * Recipe endpoints
      */
-    getRecipes() {
-        return this.get('/recipes');
-    }
-
     getRecipe(recipeId) {
         return this.get(`/recipes/${recipeId}`);
     }

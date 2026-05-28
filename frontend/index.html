@@ -112,12 +112,21 @@
     <template id="plannerPage">
         <section class="planner-page">
             <div class="planner-container">
-                <h2>Meal Planner</h2>
-                <div class="planner-controls">
-                    <input type="date" id="plannerDate" class="date-input">
-                    <button class="btn btn-primary" id="addMealBtn">Add Meal</button>
+                <div class="planner-header">
+                    <div class="period-nav">
+                        <button class="btn btn-small" id="prevPeriod">&#9664;</button>
+                        <h3 id="periodLabel">This Week</h3>
+                        <button class="btn btn-small" id="nextPeriod">&#9654;</button>
+                        <button class="btn btn-small" id="todayBtn">Today</button>
+                    </div>
+                    <div class="view-toggle">
+                        <button class="btn btn-small btn-toggle active" data-view="week">Week</button>
+                        <button class="btn btn-small btn-toggle" data-view="month">Month</button>
+                    </div>
                 </div>
-                <div id="mealPlanContent" class="meal-plan-grid"></div>
+                <div id="plannerContent"></div>
+                <div id="weekTotals" class="week-totals"></div>
+                <div id="mealDetailPanel" class="meal-detail-panel hidden"></div>
             </div>
         </section>
     </template>
@@ -152,6 +161,7 @@
     <script src="src/js/api/api-client.js"></script>
     <script src="src/js/router/router.js"></script>
     <script src="src/js/pages/profile.js"></script>
+    <script src="src/js/pages/planner.js"></script>
     <script src="src/js/app/app.js"></script>
 </body>
 </html>
