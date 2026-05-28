@@ -128,19 +128,101 @@ class ChatPageHandler {
         this.scrollToBottom();
 
         try {
-            const response = await api.sendChatMessage(`Generate ${periodType} plan`, periodType);
+            const response = await api.generatePlan(periodType);
             const loadingEl = document.getElementById(loadingId);
             if (loadingEl) loadingEl.remove();
 
-            if (response.botMessage && response.botMessage.content) {
-                this.appendMessage(container, 'bot', response.botMessage.content);
+            this.currentProposal = response.proposal;
+            const isFallback = response.fallbackActive;
+
+            if (isFallback) {
+                this.appendMessage(container, 'bot', 'Fallback mode active — using seeded data instead of AI.');
             }
+
+            this.appendMessage(container, 'bot', `Here's your ${periodType} plan:`);
+            container.innerHTML += this.renderProposalPreview(response.proposal, isFallback);
             this.scrollToBottom();
         } catch (err) {
             const loadingEl = document.getElementById(loadingId);
             if (loadingEl) loadingEl.remove();
             router.setState({ error: err.message });
         }
+    }
+
+    renderProposalPreview(proposal, isFallback) {
+        const plan = proposal.plan || {};
+        const dayCount = proposal.days ? proposal.days.length : 0;
+        const mealCount = proposal.days
+            ? proposal.days.reduce((sum, d) => sum + Object.keys(d.sections || {}).length, 0)
+            : 0;
+
+        const weekTotal = proposal.weekTotals || {};
+
+        let html = '<div class="proposal-preview">';
+        html += `
+            <div class="proposal-header">
+                <span class="proposal-type">${plan.periodType} plan</span>
+                ${isFallback ? '<span class="fallback-badge">Fallback</span>' : '<span class="ai-badge">AI</span>'}
+                <span class="proposal-status">${plan.status || 'pending'}</span>
+            </div>
+            <div class="proposal-meta">
+                <span>${dayCount} days \u00B7 ${mealCount} meals</span>
+                ${plan.aiCostCentsTotal != null ? `<span>$${(plan.aiCostCentsTotal / 100).toFixed(2)}</span>` : ''}
+                ${plan.source ? `<span>Source: ${plan.source}</span>` : ''}
+                ${plan.proposalVersion ? `<span>v${plan.proposalVersion}</span>` : ''}
+                ${plan.startDate ? `<span>${plan.startDate}${plan.endDate ? ' \u2192 ' + plan.endDate : ''}</span>` : ''}
+            </div>
+        `;
+
+        if (proposal.days && proposal.days.length > 0) {
+            html += '<div class="proposal-days">';
+            proposal.days.forEach(d => {
+                const t = d.totals || {};
+                html += `<div class="proposal-day">
+                    <div class="day-header">
+                        <span class="day-date">${d.date || ''}</span>
+                        <span class="day-total">${t.calories || 0} kcal  P:${t.proteinG || 0}g  C:${t.carbsG || 0}g  F:${t.fatG || 0}g</span>
+                    </div>`;
+                const sections = d.sections || {};
+                ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(key => {
+                    const meal = sections[key];
+                    if (!meal) return;
+                    const mealCost = meal.estimatedCostCents != null ? `$${(meal.estimatedCostCents / 100).toFixed(2)}` : '';
+                    html += `
+                        <div class="meal-row">
+                            <span class="meal-section-badge">${key}</span>
+                            <span class="meal-name">${this.escapeHtml(meal.recipeName)}</span>
+                            <span class="meal-macros">${meal.macros.calories || 0} kcal  P:${meal.macros.proteinG || 0}g  C:${meal.macros.carbsG || 0}g  F:${meal.macros.fatG || 0}g</span>
+                            <span class="meal-cost">${mealCost}</span>
+                        </div>`;
+                });
+                html += '</div>';
+            });
+            html += '</div>';
+        }
+
+        if (weekTotal.calories || weekTotal.proteinG || weekTotal.carbsG || weekTotal.fatG) {
+            html += `
+                <div class="proposal-week-total">
+                    <h4>Week Total</h4>
+                    <div class="macro-row">
+                        <span class="macro-val">${weekTotal.calories || 0} kcal</span>
+                        <span class="macro p">P: ${weekTotal.proteinG || 0}g</span>
+                        <span class="macro c">C: ${weekTotal.carbsG || 0}g</span>
+                        <span class="macro f">F: ${weekTotal.fatG || 0}g</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        html += `
+            <div class="proposal-actions">
+                <button class="btn btn-primary proposal-accept" data-proposal-id="${plan.id}">Accept</button>
+                <button class="btn btn-secondary proposal-decline" data-proposal-id="${plan.id}">Decline</button>
+            </div>
+        `;
+        html += '</div>';
+        return html;
     }
 
     async handleAccept(proposalId) {
