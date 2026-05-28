@@ -1,0 +1,75 @@
+have a look at the updated  @tasks/backend.md and implement the step 1 
+Called the Read tool with the following input: {"filePath":"/root/Panathenaia/pantryPal/tasks/backend.md"}
+<path>/root/Panathenaia/pantryPal/tasks/backend.md</path>
+<type>file</type>
+<content>
+1: # Session B — Backend Engineer
+2: 
+3: ## Your job
+4: Implement the two remaining backend endpoints: consumption and chat. Then wire AI into the app.
+5: 
+6: ## Already done (do not redo)
+7: - Auth: `POST /auth/register`, `POST /auth/login`, `GET /me` with bcrypt + HMAC tokens
+8: - Profile: `GET /profile`, `PATCH /profile/metrics`, `PATCH /profile/preferences`, `PATCH /profile/budget`
+9: - Pantry: `GET /ingredients/search`, `GET /pantry/items`, `POST /pantry/items`, `PATCH /pantry/items/{id}`, `DELETE /pantry/items/{id}`
+10: - Recipes: `GET /recipes/{id}` with ingredients + macros
+11: - Plans: `POST /plans/proposal`, `POST /plans/{id}/accept`, `POST /plans/{id}/decline`, `GET /plans/week?start=`
+12: - App bootstrap, config, DB setup, CORS + logging middleware, seed data
+13: 
+14: ## Step-by-step execution
+15: 
+16: ### Step 1 — Consumption endpoint (`POST /plan-meals/:id/consume`)
+17: - [ ] Create `ConsumeService` in `backend/internal/services/consume_service.go`
+18: - [ ] Load the plan meal by ID, verify it belongs to the requesting user
+19: - [ ] Load the recipe (if linked via `recipe_id`) to get ingredient `fdc_id` + quantities
+20: - [ ] For each ingredient, find the user's matching pantry item and deduct the quantity
+21: - [ ] Clamp pantry quantities at zero
+22: - [ ] Log each deduction to `consumption_log` with before/after quantities
+23: - [ ] Mark `plan_meals.is_consumed = 1` and set `consumed_at`
+24: - [ ] Create `ConsumeHandler` in `backend/internal/transport/http/handlers/consume_handler.go`
+25: - [ ] Add route: `mux.Handle("POST /plan-meals/{id}/consume", authRequired(http.HandlerFunc(h.Consume.ConsumeMeal)))`
+26: - [ ] Wire into `app.go` and `router.go`
+27: - [ ] DTOs: `ConsumeMealResponse` with consumed items and warnings
+28: 
+29: ### Step 2 — Chat endpoint (`POST /chat`, `GET /chat`)
+30: - [ ] Create `ChatService` in `backend/internal/services/chat_service.go`
+31: - [ ] `POST /chat`: accept `{ message, action? }`, store user message in `chat_messages`, return the stored message
+32: - [ ] `GET /chat?limit=50`: return recent messages for the authenticated user
+33: - [ ] Create `ChatHandler` in `backend/internal/transport/http/handlers/chat_handler.go`
+34: - [ ] Add routes: `POST /chat`, `GET /chat` (both auth required)
+35: - [ ] Wire into `app.go` and `router.go`
+36: - [ ] DTOs: `ChatSendRequest`, `ChatMessageResponse`, `ChatHistoryResponse`
+37: 
+38: ### Step 3 — Wire AI into the generate flow (collaborate with Session D)
+39: - [ ] Create `GenerateService` or extend `ChatService` to:
+40:   1. Accept a generation request (meal/day/week/month)
+41:   2. Call `ai.BuildPrompt()` with user context (metrics, preferences, budget, pantry)
+42:   3. Call `ai.Client.Generate()` with the prompt
+43:   4. Call `ai.ParsePlanResponse()` on the result
+44:   5. Call `PlanService.CreateProposal()` with the normalized payload
+45:   6. Return the proposal to the frontend
+46: - [ ] Add route: `POST /generate` (or integrate into `POST /chat` with an `action` field)
+47: - [ ] Wire into `app.go` (instantiate Gemini client via `ConfigFromApp`)
+48: - [ ] If Gemini is unavailable — call the fallback generator (Session D builds it in Step 3)
+49: 
+50: ### Step 4 — Hardening
+51: - [ ] Add request logging middleware with method, path, duration, status
+52: - [ ] Run `go build ./...` and fix any compilation errors
+53: - [ ] Test full flow: register → profile → create proposal → accept → week plan → consume → verify pantry deduction
+54: 
+55: ## Dependencies
+56: 
+57: | You need from      | What                        |
+58: |--------------------|-----------------------------|
+59: | Session D (AI)     | Fallback generator function |
+60: | Session D (AI)     | Gemini client is in `ai/` ready to use |
+61: | Session C (FE)     | Feedback on consume response shape |
+62: 
+63: ## Done criteria
+64: - `POST /plan-meals/:id/consume` deducts pantry and logs consumption
+65: - `POST /chat` + `GET /chat` store and return messages
+66: - Gemini generation wired and reachable via an endpoint
+67: - `go build ./...` passes
+
+(End of file - total 67 lines)
+</content>
