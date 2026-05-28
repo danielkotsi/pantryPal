@@ -51,17 +51,18 @@ func (s *GenerateService) tryGemini(ctx context.Context, userID string, periodTy
 		fmt.Println(err)
 		return GeneratePlanResult{}, fmt.Errorf("gemini generate: %w", err)
 	}
-	fmt.Println(geminiResp.Text)
 
 	parsed, err := ai.ParsePlanResponse(geminiResp.Text)
 	if err != nil {
 		return GeneratePlanResult{}, fmt.Errorf("parse plan: %w", err)
 	}
 
+	fmt.Println("this is the parsed", parsed)
 	proposal, err := s.plans.CreateProposal(ctx, userID, parsed.Proposal)
 	if err != nil {
 		return GeneratePlanResult{}, fmt.Errorf("create proposal: %w", err)
 	}
+	fmt.Println("this is the proposal", proposal)
 
 	return GeneratePlanResult{Proposal: proposal, FallbackActive: false}, nil
 }
