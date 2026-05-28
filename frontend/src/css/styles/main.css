@@ -6,16 +6,16 @@
 }
 
 :root {
-    --primary-color: #2ecc71;
-    --primary-dark: #27ae60;
-    --secondary-color: #3498db;
-    --danger-color: #e74c3c;
+    --primary-color: #c0392b;
+    --primary-dark: #a93226;
+    --secondary-color: #7f8c8d;
+    --danger-color: #922b21;
     --light-bg: #f8f9fa;
-    --dark-bg: #2c3e50;
+    --dark-bg: #1a1a2e;
     --text-primary: #2c3e50;
     --text-secondary: #7f8c8d;
-    --border-color: #ecf0f1;
-    --navbar-color: #f30e0e96;
+    --border-color: #d5d8dc;
+    --navbar-color: #7b241c;
     --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
@@ -227,7 +227,7 @@ body {
 }
 
 .btn-secondary:hover {
-    background-color: #2980b9;
+    background-color: #5d6d7e;
     box-shadow: var(--shadow);
 }
 
@@ -264,7 +264,7 @@ body {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
 }
 
 .form-actions {
@@ -387,6 +387,184 @@ body {
     margin-bottom: 2rem;
 }
 
+.search-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+}
+
+.search-results {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.search-result-item {
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background: var(--light-bg);
+}
+
+.result-name {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.add-pantry-form {
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.add-pantry-form h4 {
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.add-pantry-form .form-group {
+    margin-bottom: 0.75rem;
+}
+
+.add-pantry-form .form-group label {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.add-pantry-form .form-group input {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.85rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.add-pantry-form .form-actions {
+    margin-top: 0.75rem;
+    gap: 0.5rem;
+}
+
+.add-pantry-form .form-actions .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+.pantry-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pantry-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.pantry-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 1px 4px rgba(192, 57, 43, 0.15);
+}
+
+.pantry-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.pantry-item-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.pantry-item-qty {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.pantry-item-actions {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.pantry-item-actions .btn-small {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.btn-dec {
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-dec:hover {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-inc {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-inc:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-danger {
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.btn-danger:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
 .planner-header {
     display: flex;
     justify-content: space-between;
@@ -453,7 +631,7 @@ body {
 
 .day-column.today {
     border: 2px solid var(--primary-color);
-    background: #f0f7ff;
+    background: #fdedec;
 }
 
 .day-header {
@@ -663,7 +841,7 @@ body {
 }
 
 .month-cell.today {
-    background: #f0f7ff;
+    background: #fdedec;
 }
 
 .month-day-num {
