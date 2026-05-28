@@ -87,6 +87,7 @@ class Router {
                 return;
             }
             this.renderPage('plannerPage');
+            setTimeout(() => plannerPageHandler.init(), 0);
         });
         this.register('pantry', () => {
             if (!this.state.isAuthenticated) {
