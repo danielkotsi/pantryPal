@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PantryPal</title>
+    <link rel="stylesheet" href="src/css/styles/main.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h1>PantryPal</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" data-route="auth" class="nav-link active">Auth</a></li>
+                <li><a href="#" data-route="profile" class="nav-link">Profile</a></li>
+                <li><a href="#" data-route="planner" class="nav-link">Planner</a></li>
+                <li><a href="#" data-route="pantry" class="nav-link">Pantry</a></li>
+                <li><a href="#" data-route="chat" class="nav-link">Chat</a></li>
+            </ul>
+            <div class="navbar-user" id="navbarUser"></div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Error Display -->
+            <div id="errorContainer" class="error-container" style="display: none;">
+                <div class="error-message">
+                    <span id="errorText"></span>
+                    <button class="close-error">&times;</button>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loadingContainer" class="loading-container" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+
+            <!-- Page Content -->
+            <div id="pageContent" class="page-content">
+                <!-- Pages will be inserted here -->
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 PantryPal. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Page Templates -->
+    <template id="authPage">
+        <section class="auth-page">
+            <div class="auth-container">
+                <h2>Welcome to PantryPal</h2>
+                <form id="authForm">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="button" class="btn btn-secondary" id="toggleSignup">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </template>
+
+    <template id="profilePage">
+        <section class="profile-page">
+            <div class="profile-container">
+                <h2>My Profile</h2>
+                <div id="profileContent">
+                    <div class="profile-section">
+                        <h3>Personal Information</h3>
+                        <div id="personalInfo" class="info-grid"></div>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Body Metrics</h3>
+                        <form id="metricsForm">
+                            <div id="bodyMetrics" class="metrics-grid"></div>
+                            <button type="submit" class="btn btn-primary mt-2">Save Metrics</button>
+                        </form>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Preferences</h3>
+                        <form id="preferencesForm">
+                            <div id="preferences" class="preferences-form"></div>
+                            <button type="submit" class="btn btn-primary mt-2">Save Preferences</button>
+                        </form>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Monthly Budget</h3>
+                        <form id="budgetForm">
+                            <div id="budget" class="budget-form"></div>
+                            <button type="submit" class="btn btn-primary mt-2">Save Budget</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="plannerPage">
+        <section class="planner-page">
+            <div class="planner-container">
+                <h2>Meal Planner</h2>
+                <div class="planner-controls">
+                    <input type="date" id="plannerDate" class="date-input">
+                    <button class="btn btn-primary" id="addMealBtn">Add Meal</button>
+                </div>
+                <div id="mealPlanContent" class="meal-plan-grid"></div>
+            </div>
+        </section>
+    </template>
+
+    <template id="pantryPage">
+        <section class="pantry-page">
+            <div class="pantry-container">
+                <h2>My Pantry</h2>
+                <div class="pantry-controls">
+                    <input type="text" id="searchPantry" placeholder="Search pantry..." class="search-input">
+                    <button class="btn btn-primary" id="addItemBtn">Add Item</button>
+                </div>
+                <div id="pantryContent" class="pantry-grid"></div>
+            </div>
+        </section>
+    </template>
+
+    <template id="chatPage">
+        <section class="chat-page">
+            <div class="chat-container">
+                <h2>Chat Assistant</h2>
+                <div id="chatMessages" class="chat-messages"></div>
+                <form id="chatForm" class="chat-form">
+                    <input type="text" id="chatInput" placeholder="Ask me anything..." required>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </section>
+    </template>
+
+    <!-- Scripts -->
+    <script src="src/js/api/api-client.js"></script>
+    <script src="src/js/router/router.js"></script>
+    <script src="src/js/pages/profile.js"></script>
+    <script src="src/js/app/app.js"></script>
+</body>
+</html>
