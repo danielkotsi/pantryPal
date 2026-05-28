@@ -236,6 +236,51 @@ func (r *PlanRepository) ListAcceptedPlansForRange(ctx context.Context, userID, 
 	return plans, nil
 }
 
+func (r *PlanRepository) GetPlanMealByID(ctx context.Context, userID, mealID string) (StoredPlanMeal, error) {
+	var meal StoredPlanMeal
+	var consumedInt int
+	err := r.db.QueryRowContext(
+		ctx,
+		`SELECT pm.id, COALESCE(pm.recipe_id, ''), pm.recipe_name, pm.scheduled_date, pm.meal_section,
+		        pm.servings, COALESCE(pm.kcal, 0), COALESCE(pm.protein_g, 0), COALESCE(pm.carbs_g, 0),
+		        COALESCE(pm.fat_g, 0), pm.estimated_cost_cents, pm.is_consumed, COALESCE(pm.consumed_at, '')
+		 FROM plan_meals pm
+		 JOIN meal_plans mp ON mp.id = pm.meal_plan_id
+		 WHERE pm.id = ? AND mp.user_id = ?`,
+		mealID,
+		userID,
+	).Scan(
+		&meal.ID,
+		&meal.RecipeID,
+		&meal.RecipeName,
+		&meal.ScheduledDate,
+		&meal.MealSection,
+		&meal.Servings,
+		&meal.Calories,
+		&meal.ProteinG,
+		&meal.CarbsG,
+		&meal.FatG,
+		&meal.EstimatedCostCents,
+		&consumedInt,
+		&meal.ConsumedAt,
+	)
+	if err != nil {
+		return StoredPlanMeal{}, err
+	}
+	meal.ScheduledDate = normalizeDateOnly(meal.ScheduledDate)
+	meal.IsConsumed = consumedInt == 1
+	return meal, nil
+}
+
+func (r *PlanRepository) MarkMealConsumed(ctx context.Context, mealID string) error {
+	_, err := r.db.ExecContext(
+		ctx,
+		`UPDATE plan_meals SET is_consumed = 1, consumed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+		mealID,
+	)
+	return err
+}
+
 func (r *PlanRepository) listMealsForPlan(ctx context.Context, planID string) ([]StoredPlanMeal, error) {
 	return r.listMeals(ctx, `WHERE meal_plan_id = ?`, planID)
 }

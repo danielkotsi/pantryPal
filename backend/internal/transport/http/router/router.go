@@ -10,12 +10,15 @@ import (
 )
 
 type Handlers struct {
-	Health  *handlers.HealthHandler
-	Auth    *handlers.AuthHandler
-	Profile *handlers.ProfileHandler
-	Pantry  *handlers.PantryHandler
-	Recipe  *handlers.RecipeHandler
-	Plan    *handlers.PlanHandler
+	Health   *handlers.HealthHandler
+	Auth     *handlers.AuthHandler
+	Profile  *handlers.ProfileHandler
+	Pantry   *handlers.PantryHandler
+	Recipe   *handlers.RecipeHandler
+	Plan     *handlers.PlanHandler
+	Consume  *handlers.ConsumeHandler
+	Chat     *handlers.ChatHandler
+	Generate *handlers.GenerateHandler
 }
 
 func New(h Handlers, tokens *auth.TokenManager, users *repositories.UserRepository) http.Handler {
@@ -41,6 +44,10 @@ func New(h Handlers, tokens *auth.TokenManager, users *repositories.UserReposito
 	mux.Handle("POST /plans/{id}/accept", authRequired(http.HandlerFunc(h.Plan.AcceptProposal)))
 	mux.Handle("POST /plans/{id}/decline", authRequired(http.HandlerFunc(h.Plan.DeclineProposal)))
 	mux.Handle("GET /plans/week", authRequired(http.HandlerFunc(h.Plan.GetWeekPlan)))
+	mux.Handle("POST /plan-meals/{id}/consume", authRequired(http.HandlerFunc(h.Consume.ConsumeMeal)))
+	mux.Handle("POST /chat", authRequired(http.HandlerFunc(h.Chat.SendMessage)))
+	mux.Handle("GET /chat", authRequired(http.HandlerFunc(h.Chat.GetHistory)))
+	mux.Handle("POST /plans/generate", authRequired(http.HandlerFunc(h.Generate.GeneratePlan)))
 
 	return middleware.CORS(middleware.Logging(mux))
 }

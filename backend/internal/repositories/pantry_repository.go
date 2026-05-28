@@ -138,6 +138,48 @@ func (r *PantryRepository) Delete(ctx context.Context, userID, itemID string) er
 	return nil
 }
 
+type PantryDeduction struct {
+	PantryItemID string
+	BeforeQty    float64
+	AfterQty     float64
+	FoodDesc     string
+}
+
+func (r *PantryRepository) DeductByFood(ctx context.Context, userID string, fdcID int64, unit string, quantity float64) (PantryDeduction, error) {
+	var d PantryDeduction
+	err := r.db.QueryRowContext(
+		ctx,
+		`SELECT p.id, p.quantity, f.description
+		 FROM pantry_items p
+		 JOIN usda_foods f ON f.fdc_id = p.fdc_id
+		 WHERE p.user_id = ? AND p.fdc_id = ? AND p.unit = ?`,
+		userID,
+		fdcID,
+		unit,
+	).Scan(&d.PantryItemID, &d.BeforeQty, &d.FoodDesc)
+	if err != nil {
+		return PantryDeduction{}, err
+	}
+
+	newQty := d.BeforeQty - quantity
+	if newQty < 0 {
+		newQty = 0
+	}
+
+	_, err = r.db.ExecContext(
+		ctx,
+		`UPDATE pantry_items SET quantity = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+		newQty,
+		d.PantryItemID,
+	)
+	if err != nil {
+		return PantryDeduction{}, err
+	}
+
+	d.AfterQty = newQty
+	return d, nil
+}
+
 func (r *PantryRepository) Exists(ctx context.Context, userID, itemID string) (bool, error) {
 	_, err := r.GetByID(ctx, userID, itemID)
 	if errors.Is(err, sql.ErrNoRows) {
