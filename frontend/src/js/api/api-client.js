@@ -241,19 +241,23 @@ class APIClient {
      * Pantry endpoints
      */
     getPantryItems() {
-        return this.get('/pantry');
+        return this.get('/pantry/items');
     }
 
     addPantryItem(item) {
-        return this.post('/pantry', item);
+        return this.post('/pantry/items', item);
     }
 
-    updatePantryItem(itemId, item) {
-        return this.put(`/pantry/${itemId}`, item);
+    updatePantryItem(itemId, quantityDelta) {
+        return this.patch(`/pantry/items/${itemId}`, { quantityDelta });
     }
 
     deletePantryItem(itemId) {
-        return this.delete(`/pantry/${itemId}`);
+        return this.delete(`/pantry/items/${itemId}`);
+    }
+
+    searchIngredients(query) {
+        return this.get(`/ingredients/search?q=${encodeURIComponent(query)}`);
     }
 
     /**

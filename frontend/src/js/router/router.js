@@ -95,6 +95,7 @@ class Router {
                 return;
             }
             this.renderPage('pantryPage');
+            setTimeout(() => pantryPageHandler.init(), 0);
         });
         this.register('chat', () => {
             if (!this.state.isAuthenticated) {

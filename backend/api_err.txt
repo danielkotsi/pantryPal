@@ -1,0 +1,2 @@
+2026/05/28 15:42:25 api listening on :8080 using db ../database/sqlite/pantrypal.db
+2026/05/28 15:42:25 listen tcp :8080: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
