@@ -918,6 +918,80 @@ body {
     padding: 0.5rem 1.25rem;
 }
 
+.proposal-preview .proposal-days {
+    margin-bottom: 0.75rem;
+}
+
+.proposal-preview .proposal-day {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.proposal-preview .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0.6rem;
+    background: #f5f5f5;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.proposal-preview .day-date {
+    color: var(--text-primary);
+}
+
+.proposal-preview .day-total {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.proposal-preview .meal-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.78rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.proposal-preview .meal-row:first-child {
+    border-top: none;
+}
+
+.proposal-preview .meal-section-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    min-width: 52px;
+    text-align: center;
+}
+
+.proposal-preview .meal-name {
+    flex: 1;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.proposal-preview .meal-macros {
+    color: var(--text-secondary);
+    white-space: nowrap;
+    font-size: 0.72rem;
+}
+
+.proposal-preview .meal-cost {
+    color: var(--text-secondary);
+    min-width: 45px;
+    text-align: right;
+    font-weight: 500;
+}
+
 /* Planner Generate Button */
 .planner-header-actions {
     display: flex;

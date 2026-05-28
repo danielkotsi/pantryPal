@@ -175,18 +175,28 @@ class ChatPageHandler {
         `;
 
         if (proposal.days && proposal.days.length > 0) {
-            html += '<div class="proposal-macros"><h4>Daily Macros</h4>';
+            html += '<div class="proposal-days">';
             proposal.days.forEach(d => {
                 const t = d.totals || {};
-                html += `
-                    <div class="macro-row">
-                        <span class="macro-date">${d.date || ''}</span>
-                        <span class="macro-val">${t.calories || 0} kcal</span>
-                        <span class="macro p">P: ${t.proteinG || 0}g</span>
-                        <span class="macro c">C: ${t.carbsG || 0}g</span>
-                        <span class="macro f">F: ${t.fatG || 0}g</span>
-                    </div>
-                `;
+                html += `<div class="proposal-day">
+                    <div class="day-header">
+                        <span class="day-date">${d.date || ''}</span>
+                        <span class="day-total">${t.calories || 0} kcal  P:${t.proteinG || 0}g  C:${t.carbsG || 0}g  F:${t.fatG || 0}g</span>
+                    </div>`;
+                const sections = d.sections || {};
+                ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(key => {
+                    const meal = sections[key];
+                    if (!meal) return;
+                    const mealCost = meal.estimatedCostCents != null ? `$${(meal.estimatedCostCents / 100).toFixed(2)}` : '';
+                    html += `
+                        <div class="meal-row">
+                            <span class="meal-section-badge">${key}</span>
+                            <span class="meal-name">${this.escapeHtml(meal.recipeName)}</span>
+                            <span class="meal-macros">${meal.macros.calories || 0} kcal  P:${meal.macros.proteinG || 0}g  C:${meal.macros.carbsG || 0}g  F:${meal.macros.fatG || 0}g</span>
+                            <span class="meal-cost">${mealCost}</span>
+                        </div>`;
+                });
+                html += '</div>';
             });
             html += '</div>';
         }
