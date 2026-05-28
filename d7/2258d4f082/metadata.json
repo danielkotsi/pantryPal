@@ -1,0 +1,34 @@
+{
+  "cli_version": "0.6.3",
+  "checkpoint_id": "d72258d4f082",
+  "strategy": "manual-commit",
+  "branch": "danielstuff",
+  "checkpoints_count": 5,
+  "files_touched": [
+    "backend/internal/app/app.go",
+    "backend/internal/modules/ai/fallback.go",
+    "backend/internal/modules/ai/fallback_test.go",
+    "backend/internal/repositories/pantry_repository.go",
+    "backend/internal/repositories/plan_repository.go",
+    "backend/internal/services/generate_service.go",
+    "backend/internal/transport/http/dto/types.go",
+    "backend/internal/transport/http/handlers/generate_handler.go",
+    "backend/internal/transport/http/router/router.go",
+    "database/sqlite/pantrypal.db"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d7/2258d4f082/0/metadata.json",
+      "transcript": "/d7/2258d4f082/0/full.jsonl",
+      "content_hash": "/d7/2258d4f082/0/content_hash.txt",
+      "prompt": "/d7/2258d4f082/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 139843,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3177344,
+    "output_tokens": 10916,
+    "api_call_count": 32
+  }
+}

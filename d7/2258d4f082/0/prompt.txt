@@ -1,0 +1,76 @@
+go head and implement the step 1 in the @tasks/ai.md 
+Called the Read tool with the following input: {"filePath":"/root/Panathenaia/pantryPal/tasks/ai.md"}
+<path>/root/Panathenaia/pantryPal/tasks/ai.md</path>
+<type>file</type>
+<content>
+1: # Session D — AI / RAG Engineer
+2: 
+3: ## Your job
+4: Build the fallback plan generator, wire the Gemini client into the app, and build ingredient matching against the USDA foods table.
+5: 
+6: ## Already done (do not redo)
+7: - `ai/client.go` — Gemini HTTP client with timeout, retry, config from env
+8: - `ai/schema.go` — `PlanResponse`, `DayPlan`, `MealDetail`, `IngredientInput`, `MacroInput`, `NormalizedPlan`
+9: - `ai/parser.go` — `ParsePlanResponse()` with markdown fence repair, numeric string coercion, strict unknown field rejection, meal type normalization, duplicate section detection, date validation, cost conversion
+10: - `ai/prompts.go` — `BuildPrompt()` for meal/day/week/month with user context injection (metrics, preferences, budget, pantry snapshot)
+11: - `ai/parser_test.go` — 4 passing tests
+12: 
+13: ## Step-by-step execution
+14: 
+15: ### Step 1 — Fallback canned plan generator (1 hour, independent)
+16: **File: `backend/internal/modules/ai/fallback.go`**
+17: 
+18: - [ ] Create `GenerateFallbackWeekPlan(userID string, startDate string)` function
+19: - [ ] Return a `NormalizedPlan` with 7 days, 4 meals/day using the seeded demo recipes
+20: - [ ] Map to the same `PlanResponse` → `ParsePlanResponse` flow so output is identical format
+21: - [ ] Use demo recipes from `001_seed_demo.sql`: Banana Oat Bowl (breakfast), Chicken Rice Plate (lunch), Egg Fried Rice Lite (dinner), Yogurt Apple Snack (snacks)
+22: - [ ] Rotate or repeat across 7 days with slight variations
+23: - [ ] Set realistic macros and costs matching seed data
+24: - [ ] Export as `func FallbackWeekPlan(startDate string) (NormalizedPlan, error)` so backend can call it
+25: 
+26: ### Step 2 — Wire Gemini into the generate endpoint (1 hour, coordinate with Session B)
+27: **File: `backend/internal/services/generate_service.go`** (new) or extend **`backend/internal/services/chat_service.go`**
+28: 
+29: - [ ] Create a service function: `GeneratePlan(ctx, userID, requestType, userMessage)`
+30: - [ ] Logic:
+31:   1. Build prompt via `ai.BuildPrompt()` with user context (fetch from profile/pantry APIs)
+32:   2. Call `ai.Client.Generate()` with the prompt
+33:   3. Call `ai.ParsePlanResponse()` on the result
+34:   4. Call `backend PlanService.CreateProposal()` with `NormalizedPlan.Proposal`
+35:   5. Return the proposal response to the caller
+36: - [ ] If Gemini client returns error or times out → call `FallbackWeekPlan()` instead
+37: - [ ] Return a `fallbackActive: true` flag in the response so frontend can show a banner
+38: - [ ] Wire into `app.go` — initialize Gemini client via `ai.NewClient(ai.ConfigFromApp(cfg))`
+39: - [ ] Test: set `GEMINI_API_KEY=test`, make a request, verify parser repairs work on real output
+40: 
+41: ### Step 3 — Ingredient matching service (1 hour, optional P0/P1)
+42: **File: `backend/internal/services/ingredient_service.go`** (new)
+43: 
+44: - [ ] Build `MatchIngredients(ingredients []NormalizedIngredient) ([]MatchedIngredient, []UnmatchedIngredient)`
+45: - [ ] Query `usda_foods` by `description LIKE %name%` for each ingredient name
+46: - [ ] Use a simple fuzzy match: if a single result matches, use `fdc_id`; if multiple, pick the closest by Levenshtein or word overlap
+47: - [ ] Return matched (with `fdc_id`) and unmatched (with original name) separately
+48: - [ ] This is used by the consumption flow to know what pantry items to deduct
+49: - [ ] Optional: add a synonym map in `ai/ingredients.go` for common mismatches ("chicken breast" ↔ "Chicken, breast, meat only, raw")
+50: 
+51: ### Step 4 — Prompt presets for demo (30 mins)
+52: - [ ] Prepare 2-3 tested prompt templates that reliably produce valid JSON
+53: - [ ] Document the exact `GEMINI_API_KEY`, `GEMINI_MODEL`, and `GEMINI_TIMEOUT_SECONDS` env vars needed
+54: - [ ] Test that `ParsePlanResponse()` handles real Gemini output (not just test fixtures)
+55: 
+56: ## Dependencies
+57: 
+58: | You need from      | What                                    |
+59: |--------------------|-----------------------------------------|
+60: | Session B (backend) | PlanService.CreateProposal() is ready   |
+61: | Session B (backend) | Generate endpoint to hook into         |
+62: | Session C (frontend)| Feedback on fallback banner flag shape |
+63: 
+64: ## Done criteria
+65: - `FallbackWeekPlan()` returns valid `NormalizedPlan` that can be persisted
+66: - Gemini → parse → proposal flow works end-to-end when API key is set
+67: - Ingredient matching returns `fdc_id` or explicit unmatched list
+68: - Fallback mode activates when Gemini is unavailable
+
+(End of file - total 68 lines)
+</content>
