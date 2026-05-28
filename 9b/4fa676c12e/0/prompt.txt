@@ -1,0 +1,65 @@
+so i want to build an app with the following features, it is going to be built with a golang back-end api.
+vanilla js for the client.
+and sqlite for the db.
+i also have a gemini API key to use the AI.
+i have written some technical checkpoints for our team to work on.
+FEATURES:
+-auth
+-users with body metrics, preferences and monthly budget.
+-user to be able to change the preferences and the budget.
+-view daily/weekly/monthly program:
+    (3 meals per day + snacks
+    so the front end knows that it is going to be split in 4 sections per day.)
+    view all the ingredients used with quantities and macros, view total macros.
+-Take care of pantry:
+  search ingredients from db, add in pantry WITH quantity.
+  remove ingredients from pantry.
+-check food made and consumed to remove ingredients from pantry automatically.
+-Have a conversation in a chat interface and request a meal, request day food, request weekly program, request monthly program with buttons.
+-Accept(store) program generated, decline(regenerate).
+(optional if we have time)
+-go to day and select, and cahnge the food.
+TECHNICAL CHECKPOINTS:
+-Make the auth system with the users stored in db with metrics and preferences.
+-edit the preferences and budget.
+-create DB schema for the recipes with ingredients and macros, and for the pantry.
+-Import dataset for ingredients into a database. 
+-fake seed those.
+-view the recipes in a calendar like way per week.
+-calculate the macros.
+-calculate the cost.(the cost is going to come from the AI for the hackathon).
+-pantry DB schema.
+-add items, remove items, add purchases for the bugdet count.
+-check recipe as done and consumed to remove from pantry.
+-chat interface with AI. create meal button, create week meal plan, create monthly meal plan, accept(an incorporate into the users plan in the calendar), add to favorites but not in the plan.
+-AI context management and tools or rag.
+-match ingredients from ai with db.
+-count macros.
+(this is optional)
+-make supermarket list based on pantry items.
+take all of these insights and build a tasks.md which will have all the task in order for us to be able to create a short demo of this for a 8 hour hackathon.
+do this in @tasks/TASKS.md 
+after this, seperate md feiles are going to be generated for different sessions like this
+Session A — Product Manager
+Handles:
+roadmap
+priorities
+specs
+integration coordination
+Session B — Backend
+Session C — Frontend
+Session D — AI/RAG
+Session E — QA
+every one of them is going to have a different task.md like this :
+TASKS.md                 <- master coordination
+/tasks
+    backend.md
+    frontend.md
+    ai.md
+    infra.md
+    bugs.md
+go head and write the TASKS.md first. 
+
+
+
+so this was the previous prompt i just wanted to add it to this session so that entire has it. go head and review it and tell me what you think
