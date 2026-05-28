@@ -1,0 +1,60 @@
+{
+  "cli_version": "0.6.3",
+  "checkpoint_id": "2242c9300284",
+  "session_id": "ses_1923ed812ffetGMt9ob7AAE6PZ",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-28T09:47:02.911892457Z",
+  "branch": "danielstuff",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "backend/migrations/010_usda_schema.sql",
+    "database/sqlite/pantrypal.db",
+    "docs/architecture/backend-db-setup.md",
+    "scripts/db/import_usda.py",
+    "scripts/db/local_db.sh",
+    "scripts/db/reset-local-db"
+  ],
+  "agent": "OpenCode",
+  "model": "gpt-5.4",
+  "turn_id": "c718a4cc6ee7",
+  "checkpoint_transcript_start": 13,
+  "transcript_lines_at_start": 13,
+  "token_usage": {
+    "input_tokens": 341054,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3912704,
+    "output_tokens": 6985,
+    "api_call_count": 24
+  },
+  "session_metrics": {
+    "turn_count": 6
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-28T09:47:02.89323242Z",
+    "agent_lines": 391,
+    "agent_removed": 22,
+    "human_added": 63,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 454,
+    "total_lines_changed": 550,
+    "agent_percentage": 75.09090909090908,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 373,
+      "agent_lines_removed": 22
+    }
+  ]
+}
