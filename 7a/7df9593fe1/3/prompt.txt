@@ -1,0 +1,14 @@
+have a look at the @tasks/ you are going to be the frontend engineer
+Called the Read tool with the following input: {"filePath":"/root/Panathenaia/pantryPal/tasks/"}
+<path>/root/Panathenaia/pantryPal/tasks/</path>
+<type>directory</type>
+<entries>
+ai.md
+backend.md
+bugs.md
+frontend.md
+pm.md
+TASKS.md
+
+(6 entries)
+</entries>
