@@ -8,6 +8,12 @@
 
 - Provide reliable meal generation through Gemini with deterministic output shape for backend/frontend use.
 
+## Current Status Snapshot
+
+- AI directory is scaffolding only.
+- No Gemini client, prompt templates, schema validation, matching, or fallback implementation exists yet.
+- Backend already has schema tables ready for meal plans and chat persistence.
+
 ## Ordered Task List
 
 ### 1) Integration baseline (0:30-1:30)
@@ -24,7 +30,7 @@
 
 - [ ] `P0` Define strict JSON schema for AI output.
 - [ ] `P0` Include required fields per meal:
-  - meal_type (breakfast/lunch/dinner/snack)
+  - meal_type (breakfast/lunch/dinner/snacks)
   - recipe_name
   - ingredient list with quantity and unit
   - macros (protein, carbs, fat, calories)
@@ -78,3 +84,9 @@
 - Plans generate for meal/day/week/month requests with 4 sections/day.
 - Ingredient mapping returns canonical IDs or explicit unmatched list.
 - Fallback generator can replace Gemini without breaking the demo path.
+
+## Immediate AI Focus
+
+- Freeze the JSON response schema before any model integration work.
+- Define ingredient matching against `usda_foods` because there is no standalone `ingredients` table.
+- Build fallback canned week plan early so the demo is never blocked on Gemini.

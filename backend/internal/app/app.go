@@ -23,19 +23,32 @@ func Run(cfg config.Config) error {
 	defer conn.Close()
 
 	userRepo := repositories.NewUserRepository(conn)
+	foodRepo := repositories.NewFoodRepository(conn)
+	pantryRepo := repositories.NewPantryRepository(conn)
+	recipeRepo := repositories.NewRecipeRepository(conn)
+	planRepo := repositories.NewPlanRepository(conn)
 	tokenManager := auth.NewTokenManager(cfg.TokenSecret, cfg.TokenTTL)
 
 	authService := services.NewAuthService(userRepo, tokenManager)
 	profileService := services.NewProfileService(userRepo)
+	pantryService := services.NewPantryService(foodRepo, pantryRepo)
+	recipeService := services.NewRecipeService(recipeRepo)
+	planService := services.NewPlanService(planRepo)
 
 	healthHandler := handlers.NewHealthHandler()
 	authHandler := handlers.NewAuthHandler(authService)
 	profileHandler := handlers.NewProfileHandler(profileService)
+	pantryHandler := handlers.NewPantryHandler(pantryService)
+	recipeHandler := handlers.NewRecipeHandler(recipeService)
+	planHandler := handlers.NewPlanHandler(planService)
 
 	rootHandler := router.New(router.Handlers{
 		Health:  healthHandler,
 		Auth:    authHandler,
 		Profile: profileHandler,
+		Pantry:  pantryHandler,
+		Recipe:  recipeHandler,
+		Plan:    planHandler,
 	}, tokenManager, userRepo)
 
 	server := &http.Server{

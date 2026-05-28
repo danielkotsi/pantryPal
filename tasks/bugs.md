@@ -8,6 +8,11 @@
 
 - Validate end-to-end happy path, catch critical failures early, and keep the demo stable.
 
+## Current Status Snapshot
+
+- No QA scripts, bug tracker docs, or automated tests are implemented yet.
+- The only testable implemented surface right now is backend health/auth/profile plus DB reset flow.
+
 ## Ordered Task List
 
 ### 1) Test plan setup (0:30-1:00)
@@ -23,7 +28,8 @@
 
 - [ ] `P0` Validate auth flow: register, login, logout, bad credentials.
 - [ ] `P0` Validate profile updates: metrics, preferences, budget persistence.
-- [ ] `P0` Validate pantry flow: search/add/remove/decrement behavior.
+- [ ] `P0` Validate DB reset/setup flow and seeded demo data.
+- [ ] `P0` Validate pantry flow: search/add/remove/decrement behavior once implemented.
 - [ ] `P0` Confirm API error messages are actionable for UI display.
 
 ### 3) AI and plan flow validation (3:00-5:30)
@@ -67,3 +73,9 @@
 - End-to-end script passes in a clean environment.
 - Known issues and impact are documented for demo presenters.
 - QA sign-off delivered to PM before final demo run.
+
+## Immediate QA Focus
+
+- Start with backend API smoke coverage for `/health`, auth, and profile.
+- Create reusable test user/data notes based on the seeded local DB.
+- Add pantry/plan/AI checks only after those features land.

@@ -2,6 +2,14 @@
 
 This is the master coordination board for a short demo build.
 
+## Current Status Snapshot
+
+- Backend foundation is implemented for app bootstrap, auth, profile, token auth, DB migrations, demo seeds, and local DB reset scripts.
+- Backend docs exist for auth/profile API and DB setup.
+- Frontend is not implemented yet beyond folder scaffolding.
+- AI/RAG integration is not implemented yet beyond folder scaffolding.
+- QA automation/checklists are not implemented yet.
+
 ## Demo Goal
 
 Ship a working end-to-end flow where a user can:
@@ -30,7 +38,7 @@ Ship a working end-to-end flow where a user can:
 
 ### Phase 0 - Project setup (0:00-0:30)
 
-- [ ] `P0` Confirm repo structure and ownership for sessions:
+- [x] `P0` Confirm repo structure and ownership for sessions:
   - `/tasks/TASKS.md` (this file)
   - `/tasks/pm.md`
   - `/tasks/backend.md`
@@ -38,30 +46,30 @@ Ship a working end-to-end flow where a user can:
   - `/tasks/ai.md`
   - `/tasks/bugs.md`
 - [ ] `P0` Define API contract skeleton (auth, profile, pantry, plans, chat).
-- [ ] `P0` Define auth/security minimums (password hashing, token expiry).
+- [x] `P0` Define auth/security minimums (password hashing, token expiry).
 - [ ] `P0` Decide timebox checkpoints at 2h / 4h / 6h / 8h.
 
 ### Phase 1 - Data model and auth foundation (0:30-2:00)
 
-- [ ] `P0` Create SQLite schema + migrations for:
+- [x] `P0` Create SQLite schema + migrations for:
   - users
   - user_preferences
   - user_body_metrics
   - budgets / purchases
-  - ingredients (seed dataset)
+  - USDA foods dataset tables
   - recipes + recipe_ingredients
   - pantry_items
   - meal_plans (day/week/month)
   - plan_meals
   - consumption_log
   - chat_messages
-- [ ] `P0` Provide one-command DB setup/reset for all sessions.
-- [ ] `P0` Seed ingredient data (fake seed acceptable).
-- [ ] `P0` Implement auth endpoints:
+- [x] `P0` Provide one-command DB setup/reset for all sessions.
+- [x] `P0` Seed ingredient data and demo app data.
+- [x] `P0` Implement auth endpoints:
   - register
   - login
   - current user (`/me`)
-- [ ] `P0` Implement profile endpoints to read/update:
+- [x] `P0` Implement profile endpoints to read/update:
   - body metrics
   - preferences
   - monthly budget
@@ -141,6 +149,26 @@ Ship a working end-to-end flow where a user can:
 - Weekly view shows meals and macro totals.
 - Pantry can be edited manually and auto-deducts on meal consumption.
 - System runs locally with SQLite and seeded data.
+
+## Implemented Now
+
+- Go backend entrypoint and app wiring.
+- SQLite schema for core auth/profile/pantry/recipes/plans/chat data plus USDA food tables.
+- Demo seed SQL for one user, pantry items, recipes, and recipe ingredients.
+- Local DB bootstrap/reset scripts.
+- `GET /health`, `POST /auth/register`, `POST /auth/login`, `GET /me`.
+- `GET /profile`, `PATCH /profile/metrics`, `PATCH /profile/preferences`, `PATCH /profile/budget`.
+- Auth/profile API documentation.
+
+## Still Missing
+
+- Pantry search and CRUD endpoints/UI.
+- Recipe read endpoints and macro rollups.
+- Meal plan creation, proposal, accept/decline, and weekly view payloads.
+- Consumption logging endpoint and pantry auto-deduction logic.
+- Gemini integration, fallback planner, and chat interface.
+- Any frontend implementation.
+- QA checklist, regression script, and automated tests.
 
 ## Session Ownership Map
 

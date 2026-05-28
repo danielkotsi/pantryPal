@@ -8,6 +8,12 @@
 
 - Build a clean, fast demo UI that proves all core flows using the backend API.
 
+## Current Status Snapshot
+
+- Frontend has folder structure only.
+- No HTML, JS, CSS, routing, state, or API integration is implemented yet.
+- Auth/profile backend endpoints already exist and are ready to consume.
+
 ## Ordered Task List
 
 ### 1) App shell and API client (0:30-1:30)
@@ -75,3 +81,9 @@
 - Planner clearly shows 7 days x 4 sections with macro totals.
 - Pantry updates reflect manual edits and automatic meal consumption.
 - Chat actions are usable via buttons without manual API calls.
+
+## Immediate Frontend Focus
+
+- Build auth and profile screens first because the API already exists.
+- Delay weekly planner and pantry UI until backend contracts for plans/pantry are frozen.
+- Keep the first usable milestone as: login/register -> fetch profile -> edit profile.

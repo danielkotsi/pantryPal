@@ -9,6 +9,11 @@
 - Keep the 8-hour demo focused on a working end-to-end flow.
 - Lock scope quickly, unblock cross-session dependencies, and manage risk/time.
 
+## Current Status Snapshot
+
+- Backend Phase 1 is partially complete: auth/profile foundation, DB schema, seed data, and setup docs are implemented.
+- Frontend, AI, and QA workstreams are still open.
+
 ## Ordered Task List
 
 ### 0) Kickoff and scope lock (0:00-0:30)
@@ -21,6 +26,8 @@
 ### 1) Spec freeze for parallel work (0:30-2:00)
 
 - [ ] `P0` Freeze API v1 contract by 2h mark.
+- [x] `P0` Publish auth/profile API v1 docs for implemented endpoints.
+- [ ] `P0` Freeze pantry/plan/chat API v1 contract for remaining work.
 - [ ] `P0` Freeze AI response shape v1 (meals/day split, ingredient fields, macros, cost).
 - [ ] `P0` Freeze frontend MVP screens and navigation map.
 - [ ] `P0` Define acceptance rules for plan proposal (accept, decline/regenerate, favorite optional).
@@ -59,3 +66,9 @@
 - End-to-end demo script passes at least once without manual DB edits.
 - Each session has explicit must-have vs nice-to-have status.
 - Fallback demo path exists if AI service fails.
+
+## Immediate PM Focus
+
+- Lock the remaining contract for pantry, plans, and chat before frontend starts real UI work.
+- Decide whether monthly plan generation is true P0 or just a thin extension of weekly flow.
+- Decide whether favorites stays P1 or is dropped for the hackathon demo.

@@ -8,17 +8,23 @@
 
 - Deliver stable API and data layer for auth, profile, pantry, meal plans, macros, and consumption flows.
 
+## Current Status Snapshot
+
+- Implemented: API bootstrap, config loading, token auth, auth handlers/services, profile handlers/services, user repository, health endpoint.
+- Implemented: core SQLite schema, USDA schema, demo seed data, DB bootstrap helper, local reset scripts, API/setup docs.
+- Not implemented: pantry endpoints, recipe endpoints, plan endpoints, purchases endpoints, consumption endpoint, macro aggregation endpoints, backend tests.
+
 ## Ordered Task List
 
 ### 1) Schema and setup first (0:30-1:30)
 
-- [ ] `P0` Implement SQLite schema + migrations for:
+- [x] `P0` Implement SQLite schema + migrations for:
   - users
   - user_body_metrics
   - user_preferences
   - budgets
   - purchases
-  - ingredients
+  - USDA foods / nutrients
   - recipes
   - recipe_ingredients
   - pantry_items
@@ -27,19 +33,19 @@
   - consumption_log
   - chat_messages
   - favorites (optional table behind feature flag/time)
-- [ ] `P0` Add one-command local DB setup/reset path.
-- [ ] `P0` Seed ingredients and minimal recipes for deterministic demo.
+- [x] `P0` Add one-command local DB setup/reset path.
+- [x] `P0` Seed ingredients and minimal recipes for deterministic demo.
 
 ### 2) Auth and profile APIs (1:30-2:30)
 
-- [ ] `P0` Auth endpoints: `POST /auth/register`, `POST /auth/login`, `GET /me`.
-- [ ] `P0` Password hashing and token/session expiry rules.
-- [ ] `P0` Profile endpoints for metrics, preferences, budget:
+- [x] `P0` Auth endpoints: `POST /auth/register`, `POST /auth/login`, `GET /me`.
+- [x] `P0` Password hashing and token/session expiry rules.
+- [x] `P0` Profile endpoints for metrics, preferences, budget:
   - `GET /profile`
   - `PATCH /profile/metrics`
   - `PATCH /profile/preferences`
   - `PATCH /profile/budget`
-- [ ] `P0` Publish API v1 examples for frontend and AI sessions.
+- [x] `P0` Publish API v1 examples for frontend and AI sessions.
 
 ### 3) Pantry and recipes APIs (2:30-3:30)
 
@@ -72,7 +78,7 @@
 
 ### 6) Hardening for demo (6:00-7:00)
 
-- [ ] `P0` Add consistent error format for frontend handling.
+- [x] `P0` Add consistent error format for frontend handling.
 - [ ] `P0` Add lightweight request logging and key action tracing.
 - [ ] `P0` Add smoke checks for auth -> plan accept -> consume flow.
 - [ ] `P1` Add favorite proposal endpoint if time remains.
@@ -96,3 +102,10 @@
 - Weekly plan endpoint returns 7-day, 4-section layout with macro totals.
 - DB setup/seed is reproducible in one command.
 - Frontend can run without backend contract guesswork.
+
+## Immediate Backend Focus
+
+- Pantry search/add/update/delete endpoints.
+- Recipe read payloads with ingredient names sourced from USDA foods.
+- Weekly plan persistence/read model and accept/decline lifecycle.
+- Consumption endpoint plus pantry deduction and logging.
