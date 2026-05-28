@@ -1,0 +1,14 @@
+based on the @tasks/ go head and create the project architecture with the empty folders that are going to be needed
+Called the Read tool with the following input: {"filePath":"/root/Panathenaia/pantryPal/tasks/"}
+<path>/root/Panathenaia/pantryPal/tasks/</path>
+<type>directory</type>
+<entries>
+ai.md
+backend.md
+bugs.md
+frontend.md
+pm.md
+TASKS.md
+
+(6 entries)
+</entries>
