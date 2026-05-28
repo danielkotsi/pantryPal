@@ -1,0 +1,149 @@
+{
+  "cli_version": "0.6.3",
+  "checkpoint_id": "7a7df9593fe1",
+  "session_id": "ses_191d8b0b9ffee0lbL97eLQfFhr",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-28T13:53:01.09704009Z",
+  "branch": "danielstuff",
+  "checkpoints_count": 9,
+  "files_touched": [
+    "backend/internal/app/app.go",
+    "backend/internal/config/config.go",
+    "backend/internal/modules/ai/client.go",
+    "backend/internal/modules/ai/prompts.go",
+    "backend/internal/repositories/chat_repository.go",
+    "backend/internal/services/chat_service.go",
+    "backend/internal/services/generate_service.go",
+    "backend/internal/transport/http/dto/types.go",
+    "database/sqlite/pantrypal.db",
+    "frontend/index.html",
+    "frontend/src/css/styles/main.css",
+    "frontend/src/js/api/api-client.js",
+    "frontend/src/js/pages/chat.js",
+    "frontend/src/js/pages/planner.js",
+    "frontend/src/js/router/router.js"
+  ],
+  "agent": "OpenCode",
+  "model": "deepseek-v4-flash-free",
+  "turn_id": "cee850d2fb10",
+  "checkpoint_transcript_start": 71,
+  "transcript_lines_at_start": 71,
+  "token_usage": {
+    "input_tokens": 249200,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5054592,
+    "output_tokens": 17471,
+    "api_call_count": 67
+  },
+  "session_metrics": {
+    "turn_count": 21
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-28T13:53:01.047149145Z",
+    "agent_lines": 3,
+    "agent_removed": 23,
+    "human_added": 0,
+    "human_modified": 8,
+    "human_removed": 81,
+    "total_committed": 11,
+    "total_lines_changed": 115,
+    "agent_percentage": 22.608695652173914,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1905,
+      "user_lines_removed": 82,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "frontend/index.html": 26,
+        "frontend/src/css/styles/main.css": 501,
+        "frontend/src/js/api/api-client.js": 18,
+        "frontend/src/js/pages/chat.js": 259,
+        "frontend/src/js/pages/planner.js": 834,
+        "frontend/src/js/router/router.js": 3,
+        "tasks/ai_subtasks.md": 191,
+        "tasks/front_end_subtasks.md": 73
+      },
+      "user_removed_per_file": {
+        "frontend/index.html": 5,
+        "frontend/src/css/styles/main.css": 27,
+        "frontend/src/js/api/api-client.js": 15,
+        "frontend/src/js/router/router.js": 35
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 1,
+      "user_lines_removed": 2,
+      "agent_lines_added": 930,
+      "agent_lines_removed": 41,
+      "user_added_per_file": {
+        "backend/internal/modules/ai/client.go": 1
+      },
+      "user_removed_per_file": {
+        "backend/internal/modules/ai/client.go": 2
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 932,
+      "agent_lines_removed": 44
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 3,
+      "user_lines_removed": 3,
+      "agent_lines_added": 1000,
+      "agent_lines_removed": 61,
+      "user_added_per_file": {
+        "backend/internal/modules/ai/client.go": 3
+      },
+      "user_removed_per_file": {
+        "backend/internal/modules/ai/client.go": 3
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 2,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1008,
+      "agent_lines_removed": 63,
+      "user_added_per_file": {
+        "backend/internal/repositories/chat_repository.go": 2
+      }
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1008,
+      "agent_lines_removed": 63
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1026,
+      "agent_lines_removed": 69
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1026,
+      "agent_lines_removed": 69
+    },
+    {
+      "checkpoint_number": 9,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1026,
+      "agent_lines_removed": 69
+    }
+  ]
+}
