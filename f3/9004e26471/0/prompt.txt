@@ -1,0 +1,11 @@
+have a look at @dataset/ in which i have the USDA food ingredients lis t so that i can use it for my app.
+
+propose a way to me in order to import them into an sqlite3 database, and should it be a different one from the db that the app uses for the rest of the functionality?
+Called the Read tool with the following input: {"filePath":"/root/Panathenaia/pantryPal/dataset/"}
+<path>/root/Panathenaia/pantryPal/dataset/</path>
+<type>directory</type>
+<entries>
+FoodData_Central_foundation_food_json_2026-04-30.json
+
+(1 entries)
+</entries>

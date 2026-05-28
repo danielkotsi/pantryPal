@@ -1,0 +1,63 @@
+{
+  "cli_version": "0.6.3",
+  "checkpoint_id": "f39004e26471",
+  "session_id": "ses_1923ed812ffetGMt9ob7AAE6PZ",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-28T09:15:53.142138248Z",
+  "branch": "danielstuff",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "backend/go.sum"
+  ],
+  "agent": "OpenCode",
+  "model": "gpt-5.3-codex",
+  "turn_id": "fdf52c51bbc9",
+  "token_usage": {
+    "input_tokens": 398037,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 404608,
+    "output_tokens": 1614,
+    "api_call_count": 9
+  },
+  "session_metrics": {
+    "turn_count": 4
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-28T09:15:53.131795433Z",
+    "agent_lines": 53,
+    "agent_removed": 0,
+    "human_added": 611,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 664,
+    "total_lines_changed": 664,
+    "agent_percentage": 7.981927710843372,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1627,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "backend/cmd/api/main.go": 786,
+        "backend/go.mod": 5,
+        "backend/migrations/001_init_schema.sql": 206,
+        "backend/seeds/001_seed_demo.sql": 149,
+        "dataset/FoodData_Central_foundation_food_json_2026-04-30.json": 396,
+        "docs/architecture/backend-db-setup.md": 36,
+        "scripts/db/local_db.sh": 43,
+        "scripts/db/reset-local-db": 6
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1695,
+      "agent_lines_removed": 0
+    }
+  ]
+}
