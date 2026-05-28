@@ -1,0 +1,7 @@
+Search the codebase under /root/Panathenaia/pantryPal/backend for the HTTP handler that handles POST /chat. Read the file(s) that contain this handler and return:
+1. The file path and line number of the handler
+2. The full Go code of the handler function
+3. The struct/type of the response it returns (ChatMessageResponse or similar)
+4. What field name does it use for the reply text? (content, reply, message, etc.)
+
+Also check if there's any echo/mock behavior where the response just returns the user's message back.
