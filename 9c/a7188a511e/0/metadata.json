@@ -1,0 +1,70 @@
+{
+  "cli_version": "0.6.3",
+  "checkpoint_id": "9ca7188a511e",
+  "session_id": "ses_191d8b0b9ffee0lbL97eLQfFhr",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-28T14:19:37.097889291Z",
+  "branch": "danielstuff",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "backend/internal/services/generate_service.go",
+    "database/sqlite/pantrypal.db",
+    "frontend/src/js/pages/chat.js"
+  ],
+  "agent": "OpenCode",
+  "model": "deepseek-v4-flash-free",
+  "turn_id": "afd48836ed8c",
+  "checkpoint_transcript_start": 149,
+  "transcript_lines_at_start": 149,
+  "token_usage": {
+    "input_tokens": 41136,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 628864,
+    "output_tokens": 2602,
+    "api_call_count": 7
+  },
+  "session_metrics": {
+    "turn_count": 24
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-28T14:19:37.060410736Z",
+    "agent_lines": 74,
+    "agent_removed": 3,
+    "human_added": 1,
+    "human_modified": 1,
+    "human_removed": 0,
+    "total_committed": 76,
+    "total_lines_changed": 79,
+    "agent_percentage": 97.46835443037975,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 2,
+      "user_lines_removed": 1,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "backend/internal/services/generate_service.go": 2
+      },
+      "user_removed_per_file": {
+        "backend/internal/services/generate_service.go": 1
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 1
+    }
+  ]
+}

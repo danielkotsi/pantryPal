@@ -1,0 +1,89 @@
+this is the response of the ai model 
+{
+  "period_type": "meal",
+  "start_date": "2026-05-28",
+  "end_date": "2026-05-28",
+  "estimated_total_cost": 5.00,
+  "days": [
+    {
+      "date": "2026-05-28",
+      "meals": [
+        {
+          "meal_type": "dinner",
+          "recipe_name": "Beef and Eggplant Stir-fry with Brown Rice",
+          "servings": 1,
+          "ingredients": [
+            {
+              "name": "Lean Ground Beef",
+              "quantity": 200,
+              "unit": "g"
+            },
+            {
+              "name": "Eggplant",
+              "quantity": 300,
+              "unit": "g"
+            },
+            {
+              "name": "Uncooked Brown Rice",
+              "quantity": 1,
+              "unit": "cup"
+            },
+            {
+              "name": "Soy Sauce",
+              "quantity": 2,
+              "unit": "tbsp"
+            },
+            {
+              "name": "Fresh Ginger",
+              "quantity": 15,
+              "unit": "g"
+            },
+            {
+              "name": "Garlic Cloves",
+              "quantity": 2,
+              "unit": "cloves"
+            },
+            {
+              "name": "Sesame Oil",
+              "quantity": 1,
+              "unit": "tbsp"
+            },
+            {
+              "name": "Chopped Broccoli Florets",
+              "quantity": 100,
+              "unit": "g"
+            },
+            {
+              "name": "Olive Oil",
+              "quantity": 1,
+              "unit": "tbsp"
+            },
+            {
+              "name": "Cornstarch",
+              "quantity": 1,
+              "unit": "tbsp"
+            },
+            {
+              "name": "Water",
+              "quantity": 2,
+              "unit": "tbsp"
+            }
+          ],
+          "macros": {
+            "protein": 63,
+            "carbs": 176,
+            "fat": 58,
+            "calories": 1480
+          },
+          "estimated_cost": 5.00
+        }
+      ]
+    }
+  ]
+}
+
+
+but though this was the response, this was shown into the chat 
+day plan: 2026-05-28 → 2026-05-28 Status: proposal 1 days, 1 meals Cost: $5.00
+
+and it is also saved into the messages, it is handled as a message probably
