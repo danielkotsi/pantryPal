@@ -1,0 +1,5 @@
+- The current Go API does not yet expose USDA-backed pantry/recipe queries.
+- Next backend step should be to implement pantry + recipe endpoints against usda_foods and usda_food_nutrients, not the removed ingredient model. 
+
+
+go head and do those now

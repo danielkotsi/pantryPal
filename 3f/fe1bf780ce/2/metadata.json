@@ -1,0 +1,119 @@
+{
+  "cli_version": "0.6.3",
+  "checkpoint_id": "3ffe1bf780ce",
+  "session_id": "ses_19262bda6ffebaCmxJOvar1ej4",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-28T11:07:25.817308407Z",
+  "branch": "danielstuff",
+  "checkpoints_count": 6,
+  "files_touched": [
+    ".gitignore",
+    "backend/internal/app/app.go",
+    "backend/internal/config/config.go",
+    "backend/internal/repositories/food_repository.go",
+    "backend/internal/repositories/pantry_repository.go",
+    "backend/internal/repositories/plan_repository.go",
+    "backend/internal/repositories/recipe_repository.go",
+    "backend/internal/services/pantry_service.go",
+    "backend/internal/services/plan_service.go",
+    "backend/internal/services/recipe_service.go",
+    "backend/internal/transport/http/dto/types.go",
+    "backend/internal/transport/http/handlers/pantry_handler.go",
+    "backend/internal/transport/http/handlers/plan_handler.go",
+    "backend/internal/transport/http/handlers/recipe_handler.go",
+    "backend/internal/transport/http/router/router.go",
+    "database/sqlite/pantrypal.db",
+    "docs/api/backend-v1-pantry-recipes.md",
+    "docs/api/backend-v1-plans.md",
+    "tasks/TASKS.md",
+    "tasks/ai.md",
+    "tasks/backend.md",
+    "tasks/bugs.md",
+    "tasks/frontend.md",
+    "tasks/pm.md"
+  ],
+  "agent": "OpenCode",
+  "model": "gpt-5.4",
+  "turn_id": "426964c5473e",
+  "checkpoint_transcript_start": 138,
+  "transcript_lines_at_start": 138,
+  "token_usage": {
+    "input_tokens": 102108,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7952512,
+    "output_tokens": 26933,
+    "api_call_count": 51
+  },
+  "session_metrics": {
+    "turn_count": 15
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-28T11:07:25.732825197Z",
+    "agent_lines": 1715,
+    "agent_removed": 9,
+    "human_added": 937,
+    "human_modified": 18,
+    "human_removed": 0,
+    "total_committed": 2670,
+    "total_lines_changed": 2679,
+    "agent_percentage": 64.35237028742068,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 108,
+      "user_lines_removed": 18,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "tasks/TASKS.md": 36,
+        "tasks/ai.md": 12,
+        "tasks/backend.md": 22,
+        "tasks/bugs.md": 13,
+        "tasks/frontend.md": 12,
+        "tasks/pm.md": 13
+      },
+      "user_removed_per_file": {
+        "tasks/TASKS.md": 8,
+        "tasks/backend.md": 9,
+        "tasks/bugs.md": 1
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 856,
+      "agent_lines_removed": 18
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 856,
+      "agent_lines_removed": 18
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 856,
+      "agent_lines_removed": 18
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2172,
+      "agent_lines_removed": 26
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2172,
+      "agent_lines_removed": 26
+    }
+  ]
+}
