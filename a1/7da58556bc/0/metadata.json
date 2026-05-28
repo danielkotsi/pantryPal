@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.6.3",
+  "checkpoint_id": "a17da58556bc",
+  "session_id": "ses_191d8b0b9ffee0lbL97eLQfFhr",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-28T14:29:53.907033483Z",
+  "branch": "danielstuff",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "database/sqlite/pantrypal.db",
+    "frontend/src/css/styles/main.css",
+    "frontend/src/js/pages/chat.js"
+  ],
+  "agent": "OpenCode",
+  "model": "deepseek-v4-flash-free",
+  "turn_id": "87977cd330b1",
+  "checkpoint_transcript_start": 159,
+  "transcript_lines_at_start": 159,
+  "token_usage": {
+    "input_tokens": 9379,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 809344,
+    "output_tokens": 2140,
+    "api_call_count": 8
+  },
+  "session_metrics": {
+    "turn_count": 25
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-28T14:29:53.865071964Z",
+    "agent_lines": 94,
+    "agent_removed": 10,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 94,
+    "total_lines_changed": 104,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
