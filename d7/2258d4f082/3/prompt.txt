@@ -1,0 +1,1 @@
+so for the task to wire the AI client into app.go which agent would be responsible?

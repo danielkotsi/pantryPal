@@ -3,7 +3,7 @@
   "checkpoint_id": "d72258d4f082",
   "strategy": "manual-commit",
   "branch": "danielstuff",
-  "checkpoints_count": 13,
+  "checkpoints_count": 16,
   "files_touched": [
     "backend/internal/app/app.go",
     "backend/internal/modules/ai/fallback.go",
@@ -40,13 +40,19 @@
       "transcript": "/d7/2258d4f082/2/full.jsonl",
       "content_hash": "/d7/2258d4f082/2/content_hash.txt",
       "prompt": "/d7/2258d4f082/2/prompt.txt"
+    },
+    {
+      "metadata": "/d7/2258d4f082/3/metadata.json",
+      "transcript": "/d7/2258d4f082/3/full.jsonl",
+      "content_hash": "/d7/2258d4f082/3/content_hash.txt",
+      "prompt": "/d7/2258d4f082/3/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 430135,
+    "input_tokens": 587503,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 6673792,
-    "output_tokens": 33646,
-    "api_call_count": 111
+    "cache_read_tokens": 7724416,
+    "output_tokens": 37057,
+    "api_call_count": 120
   }
 }
