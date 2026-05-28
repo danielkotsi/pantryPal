@@ -29,29 +29,6 @@ VALUES
     ('bdg_demo_2026_05', 'usr_demo_001', '2026-05', 'USD', 45000)
 ON CONFLICT(user_id, month) DO NOTHING;
 
-INSERT INTO ingredients (
-    id,
-    name,
-    canonical_unit,
-    kcal_per_unit,
-    protein_g_per_unit,
-    carbs_g_per_unit,
-    fat_g_per_unit,
-    estimated_cost_cents_per_unit
-)
-VALUES
-    ('ing_oats', 'oats', 'g', 3.89, 0.17, 0.66, 0.07, 1),
-    ('ing_milk', 'milk', 'ml', 0.61, 0.033, 0.048, 0.033, 1),
-    ('ing_banana', 'banana', 'g', 0.89, 0.011, 0.23, 0.003, 1),
-    ('ing_chicken_breast', 'chicken breast', 'g', 1.65, 0.31, 0.0, 0.036, 2),
-    ('ing_rice', 'rice', 'g', 1.30, 0.027, 0.28, 0.003, 1),
-    ('ing_broccoli', 'broccoli', 'g', 0.35, 0.024, 0.07, 0.004, 1),
-    ('ing_olive_oil', 'olive oil', 'ml', 8.84, 0.0, 0.0, 1.0, 2),
-    ('ing_egg', 'egg', 'piece', 72, 6.3, 0.4, 4.8, 30),
-    ('ing_greek_yogurt', 'greek yogurt', 'g', 0.59, 0.10, 0.036, 0.004, 2),
-    ('ing_apple', 'apple', 'g', 0.52, 0.003, 0.14, 0.002, 1)
-ON CONFLICT(id) DO NOTHING;
-
 INSERT INTO recipes (
     id,
     name,
@@ -115,35 +92,35 @@ VALUES
     )
 ON CONFLICT(id) DO NOTHING;
 
-INSERT INTO recipe_ingredients (id, recipe_id, ingredient_id, quantity, unit)
+INSERT INTO recipe_ingredients (id, recipe_id, fdc_id, quantity, unit)
 VALUES
-    ('rci_001', 'rcp_breakfast_oats', 'ing_oats', 80, 'g'),
-    ('rci_002', 'rcp_breakfast_oats', 'ing_milk', 200, 'ml'),
-    ('rci_003', 'rcp_breakfast_oats', 'ing_banana', 120, 'g'),
-    ('rci_004', 'rcp_lunch_chicken_rice', 'ing_chicken_breast', 180, 'g'),
-    ('rci_005', 'rcp_lunch_chicken_rice', 'ing_rice', 170, 'g'),
-    ('rci_006', 'rcp_lunch_chicken_rice', 'ing_broccoli', 100, 'g'),
-    ('rci_007', 'rcp_lunch_chicken_rice', 'ing_olive_oil', 10, 'ml'),
-    ('rci_008', 'rcp_dinner_eggs_rice', 'ing_egg', 2, 'piece'),
-    ('rci_009', 'rcp_dinner_eggs_rice', 'ing_rice', 150, 'g'),
-    ('rci_010', 'rcp_dinner_eggs_rice', 'ing_broccoli', 80, 'g'),
-    ('rci_011', 'rcp_dinner_eggs_rice', 'ing_olive_oil', 8, 'ml'),
-    ('rci_012', 'rcp_snack_yogurt_apple', 'ing_greek_yogurt', 200, 'g'),
-    ('rci_013', 'rcp_snack_yogurt_apple', 'ing_apple', 160, 'g')
+    ('rci_001', 'rcp_breakfast_oats', 2346396, 80, 'g'),
+    ('rci_002', 'rcp_breakfast_oats', 746778, 200, 'ml'),
+    ('rci_003', 'rcp_breakfast_oats', 1105314, 120, 'g'),
+    ('rci_004', 'rcp_lunch_chicken_rice', 331960, 180, 'g'),
+    ('rci_005', 'rcp_lunch_chicken_rice', 2512381, 170, 'g'),
+    ('rci_006', 'rcp_lunch_chicken_rice', 747447, 100, 'g'),
+    ('rci_007', 'rcp_lunch_chicken_rice', 748608, 10, 'ml'),
+    ('rci_008', 'rcp_dinner_eggs_rice', 323604, 2, 'piece'),
+    ('rci_009', 'rcp_dinner_eggs_rice', 2512381, 150, 'g'),
+    ('rci_010', 'rcp_dinner_eggs_rice', 747447, 80, 'g'),
+    ('rci_011', 'rcp_dinner_eggs_rice', 748608, 8, 'ml'),
+    ('rci_012', 'rcp_snack_yogurt_apple', 330137, 200, 'g'),
+    ('rci_013', 'rcp_snack_yogurt_apple', 1750341, 160, 'g')
 ON CONFLICT(id) DO NOTHING;
 
-INSERT INTO pantry_items (id, user_id, ingredient_id, quantity, unit)
+INSERT INTO pantry_items (id, user_id, fdc_id, quantity, unit)
 VALUES
-    ('pnt_001', 'usr_demo_001', 'ing_oats', 500, 'g'),
-    ('pnt_002', 'usr_demo_001', 'ing_milk', 1500, 'ml'),
-    ('pnt_003', 'usr_demo_001', 'ing_banana', 600, 'g'),
-    ('pnt_004', 'usr_demo_001', 'ing_chicken_breast', 1000, 'g'),
-    ('pnt_005', 'usr_demo_001', 'ing_rice', 2000, 'g'),
-    ('pnt_006', 'usr_demo_001', 'ing_broccoli', 800, 'g'),
-    ('pnt_007', 'usr_demo_001', 'ing_olive_oil', 500, 'ml'),
-    ('pnt_008', 'usr_demo_001', 'ing_egg', 12, 'piece'),
-    ('pnt_009', 'usr_demo_001', 'ing_greek_yogurt', 1000, 'g'),
-    ('pnt_010', 'usr_demo_001', 'ing_apple', 900, 'g')
-ON CONFLICT(user_id, ingredient_id, unit) DO UPDATE SET
+    ('pnt_001', 'usr_demo_001', 2346396, 500, 'g'),
+    ('pnt_002', 'usr_demo_001', 746778, 1500, 'ml'),
+    ('pnt_003', 'usr_demo_001', 1105314, 600, 'g'),
+    ('pnt_004', 'usr_demo_001', 331960, 1000, 'g'),
+    ('pnt_005', 'usr_demo_001', 2512381, 2000, 'g'),
+    ('pnt_006', 'usr_demo_001', 747447, 800, 'g'),
+    ('pnt_007', 'usr_demo_001', 748608, 500, 'ml'),
+    ('pnt_008', 'usr_demo_001', 323604, 12, 'piece'),
+    ('pnt_009', 'usr_demo_001', 330137, 1000, 'g'),
+    ('pnt_010', 'usr_demo_001', 1750341, 900, 'g')
+ON CONFLICT(user_id, fdc_id, unit) DO UPDATE SET
     quantity = excluded.quantity,
     updated_at = CURRENT_TIMESTAMP;

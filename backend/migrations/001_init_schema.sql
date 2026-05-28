@@ -50,24 +50,11 @@ CREATE TABLE IF NOT EXISTS budgets (
     UNIQUE (user_id, month)
 );
 
-CREATE TABLE IF NOT EXISTS ingredients (
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    canonical_unit TEXT NOT NULL,
-    kcal_per_unit REAL NOT NULL DEFAULT 0,
-    protein_g_per_unit REAL NOT NULL DEFAULT 0,
-    carbs_g_per_unit REAL NOT NULL DEFAULT 0,
-    fat_g_per_unit REAL NOT NULL DEFAULT 0,
-    estimated_cost_cents_per_unit INTEGER NOT NULL DEFAULT 0,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS purchases (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
     budget_id TEXT,
-    ingredient_id TEXT,
+    fdc_id INTEGER,
     description TEXT,
     quantity REAL,
     unit TEXT,
@@ -76,7 +63,7 @@ CREATE TABLE IF NOT EXISTS purchases (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (budget_id) REFERENCES budgets(id) ON DELETE SET NULL,
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE SET NULL
+    FOREIGN KEY (fdc_id) REFERENCES usda_foods(fdc_id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS recipes (
@@ -98,26 +85,26 @@ CREATE TABLE IF NOT EXISTS recipes (
 CREATE TABLE IF NOT EXISTS recipe_ingredients (
     id TEXT PRIMARY KEY,
     recipe_id TEXT NOT NULL,
-    ingredient_id TEXT NOT NULL,
+    fdc_id INTEGER NOT NULL,
     quantity REAL NOT NULL CHECK (quantity >= 0),
     unit TEXT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE RESTRICT,
-    UNIQUE (recipe_id, ingredient_id, unit)
+    FOREIGN KEY (fdc_id) REFERENCES usda_foods(fdc_id) ON DELETE RESTRICT,
+    UNIQUE (recipe_id, fdc_id, unit)
 );
 
 CREATE TABLE IF NOT EXISTS pantry_items (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
-    ingredient_id TEXT NOT NULL,
+    fdc_id INTEGER NOT NULL,
     quantity REAL NOT NULL CHECK (quantity >= 0),
     unit TEXT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE RESTRICT,
-    UNIQUE (user_id, ingredient_id, unit)
+    FOREIGN KEY (fdc_id) REFERENCES usda_foods(fdc_id) ON DELETE RESTRICT,
+    UNIQUE (user_id, fdc_id, unit)
 );
 
 CREATE TABLE IF NOT EXISTS meal_plans (
@@ -167,7 +154,7 @@ CREATE TABLE IF NOT EXISTS consumption_log (
     id TEXT PRIMARY KEY,
     plan_meal_id TEXT,
     user_id TEXT NOT NULL,
-    ingredient_id TEXT,
+    fdc_id INTEGER,
     pantry_item_id TEXT,
     quantity_deducted REAL NOT NULL CHECK (quantity_deducted >= 0),
     unit TEXT NOT NULL,
@@ -177,7 +164,7 @@ CREATE TABLE IF NOT EXISTS consumption_log (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (plan_meal_id) REFERENCES plan_meals(id) ON DELETE SET NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE SET NULL,
+    FOREIGN KEY (fdc_id) REFERENCES usda_foods(fdc_id) ON DELETE SET NULL,
     FOREIGN KEY (pantry_item_id) REFERENCES pantry_items(id) ON DELETE SET NULL
 );
 
@@ -196,9 +183,8 @@ CREATE TABLE IF NOT EXISTS chat_messages (
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-CREATE INDEX IF NOT EXISTS idx_ingredients_name ON ingredients(name);
 CREATE INDEX IF NOT EXISTS idx_pantry_items_user_id ON pantry_items(user_id);
-CREATE INDEX IF NOT EXISTS idx_pantry_items_ingredient_id ON pantry_items(ingredient_id);
+CREATE INDEX IF NOT EXISTS idx_pantry_items_fdc_id ON pantry_items(fdc_id);
 CREATE INDEX IF NOT EXISTS idx_meal_plans_user_period ON meal_plans(user_id, period_type, start_date);
 CREATE INDEX IF NOT EXISTS idx_plan_meals_meal_plan_id ON plan_meals(meal_plan_id);
 CREATE INDEX IF NOT EXISTS idx_plan_meals_schedule ON plan_meals(scheduled_date, meal_section);
