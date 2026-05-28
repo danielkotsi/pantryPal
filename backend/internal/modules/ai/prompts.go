@@ -13,6 +13,7 @@ const (
 	PromptTemplateDayPlan    PromptTemplate = "day_plan"
 	PromptTemplateWeekPlan   PromptTemplate = "week_plan"
 	PromptTemplateMonthPlan  PromptTemplate = "month_plan"
+	PromptTemplateChat       PromptTemplate = "chat"
 )
 
 var ErrUnknownPromptTemplate = errors.New("unknown prompt template")
@@ -40,6 +41,8 @@ func BuildPrompt(template PromptTemplate, req PromptRequest) (string, error) {
 		objective = "Create a 7-day meal plan with exactly 4 sections per day: breakfast, lunch, dinner, snacks."
 	case PromptTemplateMonthPlan:
 		objective = "Create a month meal plan with exactly 4 sections per day: breakfast, lunch, dinner, snacks."
+	case PromptTemplateChat:
+		objective = "Respond conversationally to the user's chat message."
 	default:
 		return "", ErrUnknownPromptTemplate
 	}
@@ -47,9 +50,14 @@ func BuildPrompt(template PromptTemplate, req PromptRequest) (string, error) {
 	sections := []string{
 		"You are PantryPal's meal planning model.",
 		objective,
-		"Return valid JSON only.",
-		"Do not include markdown fences, commentary, or explanatory text.",
-		"Use the exact meal_type values breakfast, lunch, dinner, and snacks.",
+	}
+
+	if template != PromptTemplateChat {
+		sections = append(sections,
+			"Return valid JSON only.",
+			"Do not include markdown fences, commentary, or explanatory text.",
+			"Use the exact meal_type values breakfast, lunch, dinner, and snacks.",
+		)
 	}
 
 	if contract := strings.TrimSpace(req.ResponseContract); contract != "" {
@@ -75,10 +83,17 @@ func BuildPrompt(template PromptTemplate, req PromptRequest) (string, error) {
 	}
 
 	guardrails := []string{
-		"Use realistic grocery ingredients and household units.",
-		"Keep ingredient names specific and easy to match to USDA foods.",
-		"Keep meals budget-aware and avoid luxury ingredients unless explicitly requested.",
+		"Be conversational, concise, and helpful.",
 	}
+
+	if template != PromptTemplateChat {
+		guardrails = []string{
+			"Use realistic grocery ingredients and household units.",
+			"Keep ingredient names specific and easy to match to USDA foods.",
+			"Keep meals budget-aware and avoid luxury ingredients unless explicitly requested.",
+		}
+	}
+
 	if len(req.AdditionalInstructions) > 0 {
 		guardrails = append(guardrails, req.AdditionalInstructions...)
 	}

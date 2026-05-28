@@ -25,6 +25,36 @@ type StoredChatMessage struct {
 	CreatedAt string
 }
 
+func (r *ChatRepository) InsertBotMessage(ctx context.Context, userID, content string) (StoredChatMessage, error) {
+	msgID, err := id.New("msg")
+	if err != nil {
+		return StoredChatMessage{}, err
+	}
+
+	now := time.Now().UTC().Format(time.RFC3339)
+
+	_, err = r.db.ExecContext(
+		ctx,
+		`INSERT INTO chat_messages (id, user_id, role, action, content, metadata_json, created_at)
+		 VALUES (?, ?, 'assistant', '', ?, '{}', ?)`,
+		msgID,
+		userID,
+		content,
+		now,
+	)
+	if err != nil {
+		return StoredChatMessage{}, err
+	}
+
+	return StoredChatMessage{
+		ID:        msgID,
+		UserID:    userID,
+		Role:      "assistant",
+		Content:   content,
+		CreatedAt: now,
+	}, nil
+}
+
 func (r *ChatRepository) InsertUserMessage(ctx context.Context, userID, message, action string) (StoredChatMessage, error) {
 	msgID, err := id.New("msg")
 	if err != nil {

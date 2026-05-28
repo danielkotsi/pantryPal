@@ -48,8 +48,10 @@ func (s *GenerateService) tryGemini(ctx context.Context, userID string, periodTy
 
 	geminiResp, err := s.client.Generate(ctx, ai.GenerateRequest{Prompt: prompt})
 	if err != nil {
+		fmt.Println(err)
 		return GeneratePlanResult{}, fmt.Errorf("gemini generate: %w", err)
 	}
+	fmt.Println(geminiResp.Text)
 
 	parsed, err := ai.ParsePlanResponse(geminiResp.Text)
 	if err != nil {

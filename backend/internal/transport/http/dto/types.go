@@ -239,6 +239,11 @@ type ChatHistoryResponse struct {
 	Messages []ChatMessageResponse `json:"messages"`
 }
 
+type ChatSendResponse struct {
+	UserMessage ChatMessageResponse `json:"userMessage"`
+	BotMessage  ChatMessageResponse `json:"botMessage"`
+}
+
 type GeneratePlanRequest struct {
 	PeriodType string `json:"periodType"`
 	Message    string `json:"message,omitempty"`

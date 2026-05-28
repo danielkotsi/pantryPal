@@ -285,12 +285,20 @@ class APIClient {
     /**
      * Chat endpoints
      */
-    sendChatMessage(message) {
-        return this.post('/chat', { message });
+    sendChatMessage(message, action) {
+        const body = { message };
+        if (action) body.action = action;
+        return this.post('/chat', body);
     }
 
     getChatHistory() {
         return this.get('/chat');
+    }
+
+    generatePlan(periodType, message) {
+        const body = { periodType };
+        if (message) body.message = message;
+        return this.post('/plans/generate', body);
     }
 
     /**

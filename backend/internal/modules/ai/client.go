@@ -9,7 +9,6 @@ import (
 	"io"
 	"net"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 
@@ -31,6 +30,7 @@ type Client struct {
 	retryBackoff   time.Duration
 	responseFormat string
 	httpClient     *http.Client
+	Endpoint       string
 }
 
 type GenerateRequest struct {
@@ -113,13 +113,13 @@ func NewClient(cfg Config) (*Client, error) {
 		return nil, ErrMissingAPIKey
 	}
 	if strings.TrimSpace(cfg.Model) == "" {
-		cfg.Model = "gemini-2.0-flash"
+		cfg.Model = "gemini-2.5-flash"
 	}
 	if strings.TrimSpace(cfg.BaseURL) == "" {
 		cfg.BaseURL = "https://generativelanguage.googleapis.com"
 	}
 	if cfg.Timeout <= 0 {
-		cfg.Timeout = 20 * time.Second
+		cfg.Timeout = 40 * time.Second
 	}
 	if cfg.RetryMax < 0 {
 		cfg.RetryMax = 0
@@ -134,6 +134,7 @@ func NewClient(cfg Config) (*Client, error) {
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	transport.ResponseHeaderTimeout = cfg.Timeout
 	transport.DialContext = (&net.Dialer{Timeout: cfg.Timeout}).DialContext
+	endpoint := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=%s", cfg.APIKey)
 
 	return &Client{
 		apiKey:         cfg.APIKey,
@@ -147,6 +148,7 @@ func NewClient(cfg Config) (*Client, error) {
 			Timeout:   cfg.Timeout,
 			Transport: transport,
 		},
+		Endpoint: endpoint,
 	}, nil
 }
 
@@ -175,12 +177,10 @@ func (c *Client) Generate(ctx context.Context, req GenerateRequest) (GenerateRes
 		return GenerateResponse{}, err
 	}
 
-	endpoint := fmt.Sprintf("%s/v1beta/models/%s:generateContent?key=%s", c.baseURL, url.PathEscape(c.model), url.QueryEscape(c.apiKey))
-
 	var lastErr error
 	for attempt := 0; attempt <= c.retryMax; attempt++ {
 		start := time.Now()
-		response, err := c.doRequest(ctx, endpoint, body)
+		response, err := c.doRequest(ctx, c.Endpoint, body)
 		if err == nil {
 			response.Latency = time.Since(start)
 			return response, nil

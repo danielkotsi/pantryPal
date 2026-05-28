@@ -38,8 +38,6 @@ func Run(cfg config.Config) error {
 	recipeService := services.NewRecipeService(recipeRepo)
 	planService := services.NewPlanService(planRepo)
 	consumeService := services.NewConsumeService(planRepo, recipeRepo, pantryRepo, consumptionLogRepo)
-	chatService := services.NewChatService(chatRepo)
-
 	var geminiClient *ai.Client
 	geminiCfg := ai.ConfigFromApp(cfg)
 	client, err := ai.NewClient(geminiCfg)
@@ -51,6 +49,7 @@ func Run(cfg config.Config) error {
 	}
 
 	generateService := services.NewGenerateService(geminiClient, planService, profileService, pantryService)
+	chatService := services.NewChatService(chatRepo, generateService, geminiClient, profileService, pantryService)
 
 	healthHandler := handlers.NewHealthHandler()
 	authHandler := handlers.NewAuthHandler(authService)
